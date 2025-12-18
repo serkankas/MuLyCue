@@ -12,6 +12,8 @@ class PanelManager {
     }
     
     addPanel(type, config = {}) {
+        console.log('Adding panel:', type, config);
+        
         const PanelClass = {
             'lyrics': LyricsPanel,
             'chords': ChordsPanel,
@@ -27,12 +29,20 @@ class PanelManager {
             return null;
         }
         
+        console.log('Panel class found:', PanelClass.name);
+        
         const panel = new PanelClass(config);
+        console.log('Panel instance created:', panel.id);
+        
         this.panels.set(panel.id, panel);
         
         const container = document.getElementById('panel-container');
         if (container) {
+            console.log('Appending panel to container');
             container.appendChild(panel.element);
+            console.log('Panel appended successfully');
+        } else {
+            console.error('Panel container not found!');
         }
         
         return panel;
@@ -70,6 +80,8 @@ class PanelManager {
     }
     
     loadLayout(layoutName = null) {
+        console.log('Loading layout:', layoutName || 'saved/default');
+        
         // Clear existing panels
         this.clearAllPanels();
         
@@ -77,13 +89,15 @@ class PanelManager {
         
         if (layoutName && LAYOUT_PRESETS[layoutName]) {
             // Load preset
+            console.log('Loading preset:', layoutName);
             layout = LAYOUT_PRESETS[layoutName];
-        } else {
+        } else if (!layoutName) {
             // Load saved layout
             const saved = localStorage.getItem('mulycue-player-layout');
             if (saved) {
                 try {
                     layout = JSON.parse(saved);
+                    console.log('Loaded saved layout:', layout.length, 'panels');
                 } catch (e) {
                     console.error('Error loading saved layout:', e);
                     layout = null;
@@ -91,19 +105,36 @@ class PanelManager {
             }
         }
         
-        if (layout && Array.isArray(layout)) {
-            layout.forEach(({ type, config }) => this.addPanel(type, config));
+        if (layout && Array.isArray(layout) && layout.length > 0) {
+            console.log('Creating', layout.length, 'panels...');
+            layout.forEach(({ type, config }) => {
+                const panel = this.addPanel(type, config);
+                console.log('Created panel:', type, panel ? panel.id : 'FAILED');
+            });
         } else {
             // Load default layout
+            console.log('Loading default layout...');
             this.loadDefaultLayout();
         }
+        
+        console.log('Layout loaded. Total panels:', this.panels.size);
     }
     
     loadDefaultLayout() {
-        this.addPanel('lyrics', { x: 20, y: 20, width: 600, height: 400 });
-        this.addPanel('chords', { x: 640, y: 20, width: 300, height: 200 });
-        this.addPanel('bpm', { x: 640, y: 240, width: 300, height: 200 });
-        this.addPanel('timeline', { x: 20, y: 440, width: 920, height: 120 });
+        console.log('Creating default panels...');
+        const panels = [
+            { type: 'lyrics', config: { x: 20, y: 20, width: 600, height: 400 } },
+            { type: 'chords', config: { x: 640, y: 20, width: 300, height: 200 } },
+            { type: 'bpm', config: { x: 640, y: 240, width: 300, height: 200 } },
+            { type: 'timeline', config: { x: 20, y: 440, width: 920, height: 120 } }
+        ];
+        
+        panels.forEach(({ type, config }) => {
+            const panel = this.addPanel(type, config);
+            console.log('Default panel created:', type, panel ? panel.id : 'FAILED');
+        });
+        
+        console.log('Default layout created. Total panels:', this.panels.size);
     }
     
     clearAllPanels() {
@@ -147,10 +178,14 @@ class PanelManager {
                 this.clearAllPanels();
                 layout.forEach(({ type, config }) => this.addPanel(type, config));
                 this.saveLayout();
-                showToast('Layout imported successfully', 'success');
+                if (typeof showToast === 'function') {
+                    showToast('Layout imported successfully', 'success');
+                }
             } catch (error) {
                 console.error('Error importing layout:', error);
-                showToast('Error importing layout', 'error');
+                if (typeof showToast === 'function') {
+                    showToast('Error importing layout', 'error');
+                }
             }
         };
         
@@ -190,9 +225,13 @@ class PanelManager {
         const newWindow = window.open(url, `mulycue-window-${Date.now()}`, features);
         
         if (newWindow) {
-            showToast('New window opened', 'success');
+            if (typeof showToast === 'function') {
+                showToast('New window opened', 'success');
+            }
         } else {
-            showToast('Failed to open new window. Check popup blocker.', 'error');
+            if (typeof showToast === 'function') {
+                showToast('Failed to open new window. Check popup blocker.', 'error');
+            }
         }
     }
     
@@ -245,10 +284,34 @@ const LAYOUT_PRESETS = {
 window.panelManager = null;
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    window.panelManager = new PanelManager();
-    console.log('Panel Manager initialized');
-});
+function initPanelManager() {
+    if (!window.panelManager) {
+        console.log('Initializing Panel Manager...');
+        
+        // Check if container exists
+        const container = document.getElementById('panel-container');
+        if (!container) {
+            console.error('Panel container not found!');
+            return false;
+        }
+        
+        console.log('Panel container found:', container);
+        
+        window.panelManager = new PanelManager();
+        console.log('Panel Manager initialized with', window.panelManager.panels.size, 'panels');
+        
+        return true;
+    }
+    return true;
+}
+
+// Auto-initialize if DOM is already loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPanelManager);
+} else {
+    // DOM already loaded
+    initPanelManager();
+}
 
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {

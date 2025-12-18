@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel System Test - MuLyCue</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/panels.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .test-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--bg-secondary);
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 999;
+        }
+        
+        .test-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: var(--bg-secondary);
+            border-top: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 999;
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Test Header -->
+    <div class="test-header">
+        <h2>🧪 Panel System Test</h2>
+        <div class="test-controls">
+            <button onclick="testUpdatePanels()">Update Panels</button>
+            <button onclick="toggleLayoutControls()">Toggle Layout</button>
+        </div>
+    </div>
+
+    <!-- Panel Container -->
+    <div id="panel-container"></div>
+
+    <!-- Layout Controls -->
+    <div id="layoutControls" class="layout-controls" style="display: block;">
+        <h3>⚙️ Layout Controls</h3>
+        
+        <div class="layout-presets">
+            <label>Presets:</label>
+            <select id="presetSelect" onchange="loadPreset(this.value)">
+                <option value="">Select Preset...</option>
+                <option value="default">Default</option>
+                <option value="vocalist">Vocalist</option>
+                <option value="guitarist">Guitarist</option>
+                <option value="drummer">Drummer</option>
+                <option value="minimal">Minimal</option>
+            </select>
+        </div>
+        
+        <div class="panel-toggles">
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-lyrics" checked onchange="togglePanel('lyrics', this.checked)">
+                <label for="toggle-lyrics">📝 Lyrics</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-chords" checked onchange="togglePanel('chords', this.checked)">
+                <label for="toggle-chords">🎸 Chords</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-bpm" checked onchange="togglePanel('bpm', this.checked)">
+                <label for="toggle-bpm">🥁 BPM</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-beat" onchange="togglePanel('beat', this.checked)">
+                <label for="toggle-beat">⏱️ Beat</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-section" onchange="togglePanel('section', this.checked)">
+                <label for="toggle-section">🎬 Section</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-timeline" checked onchange="togglePanel('timeline', this.checked)">
+                <label for="toggle-timeline">▶️ Timeline</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-transpose" onchange="togglePanel('transpose', this.checked)">
+                <label for="toggle-transpose">🎹 Transpose</label>
+            </div>
+        </div>
+        
+        <div class="layout-actions">
+            <button onclick="window.panelManager.saveLayout()">💾 Save Layout</button>
+            <button onclick="window.panelManager.resetLayout()">🔄 Reset</button>
+            <button onclick="window.panelManager.exportLayout()">📤 Export</button>
+        </div>
+    </div>
+
+    <!-- Test Footer -->
+    <div class="test-footer">
+        <span id="panelCount">Panels: 0</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/panels.js"></script>
+    <script src="js/panel-manager.js"></script>
+    <script>
+        // Test functions
+        function toggleLayoutControls() {
+            const controls = document.getElementById('layoutControls');
+            controls.style.display = controls.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function loadPreset(presetName) {
+            if (presetName && window.panelManager) {
+                window.panelManager.loadLayout(presetName);
+                updatePanelToggles();
+                updatePanelCount();
+            }
+        }
+
+        function togglePanel(type, enabled) {
+            if (!window.panelManager) return;
+            
+            if (enabled) {
+                window.panelManager.addPanel(type);
+            } else {
+                const panels = window.panelManager.getPanelsByType(type);
+                panels.forEach(panel => window.panelManager.removePanel(panel.id));
+            }
+            updatePanelCount();
+        }
+
+        function updatePanelToggles() {
+            if (!window.panelManager) return;
+            
+            const types = ['lyrics', 'chords', 'bpm', 'beat', 'section', 'timeline', 'transpose'];
+            
+            types.forEach(type => {
+                const checkbox = document.getElementById(`toggle-${type}`);
+                if (checkbox) {
+                    const panels = window.panelManager.getPanelsByType(type);
+                    checkbox.checked = panels.length > 0;
+                }
+            });
+        }
+
+        function updatePanelCount() {
+            if (window.panelManager) {
+                document.getElementById('panelCount').textContent = 
+                    `Panels: ${window.panelManager.panels.size}`;
+            }
+        }
+
+        // Test data update
+        let testBeat = 1;
+        let testPosition = 0;
+        let testDuration = 180;
+
+        function testUpdatePanels() {
+            if (!window.panelManager) return;
+            
+            testBeat = (testBeat % 4) + 1;
+            testPosition += 5;
+            if (testPosition > testDuration) testPosition = 0;
+            
+            const testData = {
+                currentLine: 'Test lyrics line ' + Math.floor(testPosition / 10),
+                previousLine: 'Previous line',
+                nextLine: 'Next line',
+                currentChord: ['C', 'Am', 'F', 'G'][testBeat - 1],
+                nextChord: ['Am', 'F', 'G', 'C'][testBeat - 1],
+                bpm: 120,
+                currentBeat: testBeat,
+                currentSection: 'Verse 1',
+                position: testPosition,
+                duration: testDuration,
+                transpose: 0
+            };
+            
+            window.panelManager.updateAllPanels(testData);
+            console.log('Panels updated with test data');
+        }
+
+        // Auto-update test data
+        setInterval(() => {
+            if (window.panelManager && window.panelManager.panels.size > 0) {
+                testUpdatePanels();
+            }
+        }, 1000);
+
+        // Wait for panel manager to initialize
+        function checkInit() {
+            if (window.panelManager) {
+                console.log('✅ Panel Manager initialized!');
+                updatePanelCount();
+                updatePanelToggles();
+            } else {
+                console.log('⏳ Waiting for Panel Manager...');
+                setTimeout(checkInit, 100);
+            }
+        }
+        
+        checkInit();
+    </script>
+</body>
+</html>
+

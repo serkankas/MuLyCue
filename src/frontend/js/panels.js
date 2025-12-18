@@ -49,6 +49,9 @@ class Panel {
         this.updatePosition();
         this.updateSize();
         
+        // Initialize with default content
+        this.updateContent({});
+        
         return panel;
     }
     
@@ -267,7 +270,7 @@ class LyricsPanel extends Panel {
         super('lyrics', { ...config, minWidth: 400, minHeight: 300 });
     }
     
-    updateContent(data) {
+    updateContent(data = {}) {
         const content = this.element.querySelector('.panel-content');
         content.innerHTML = `
             <div class="lyrics-previous">${data.previousLine || ''}</div>
@@ -282,7 +285,7 @@ class ChordsPanel extends Panel {
         super('chords', { ...config, minWidth: 250, minHeight: 200 });
     }
     
-    updateContent(data) {
+    updateContent(data = {}) {
         const content = this.element.querySelector('.panel-content');
         content.innerHTML = `
             <div class="chord-label">Current Chord:</div>
@@ -297,7 +300,7 @@ class BPMPanel extends Panel {
         super('bpm', { ...config, minWidth: 200, minHeight: 150 });
     }
     
-    updateContent(data) {
+    updateContent(data = {}) {
         const content = this.element.querySelector('.panel-content');
         content.innerHTML = `
             <div class="bpm-display">${data.bpm || 120}</div>
@@ -311,7 +314,7 @@ class BeatPanel extends Panel {
         super('beat', { ...config, minWidth: 200, minHeight: 150 });
     }
     
-    updateContent(data) {
+    updateContent(data = {}) {
         const content = this.element.querySelector('.panel-content');
         const beats = [1, 2, 3, 4].map(b => 
             `<div class="beat-dot ${b === data.currentBeat ? 'active' : ''}">${b}</div>`
@@ -325,7 +328,7 @@ class SectionPanel extends Panel {
         super('section', { ...config, minWidth: 300, minHeight: 80 });
     }
     
-    updateContent(data) {
+    updateContent(data = {}) {
         const content = this.element.querySelector('.panel-content');
         content.innerHTML = `<div class="section-name">${data.currentSection || '-'}</div>`;
     }
@@ -336,7 +339,7 @@ class TimelinePanel extends Panel {
         super('timeline', { ...config, minWidth: 400, minHeight: 100 });
     }
     
-    updateContent(data) {
+    updateContent(data = {}) {
         const content = this.element.querySelector('.panel-content');
         const progress = data.duration > 0 ? (data.position / data.duration) * 100 : 0;
         
@@ -359,12 +362,13 @@ class TransposePanel extends Panel {
         super('transpose', { ...config, minWidth: 200, minHeight: 120 });
     }
     
-    updateContent(data) {
+    updateContent(data = {}) {
         const content = this.element.querySelector('.panel-content');
+        const transpose = data.transpose || 0;
         content.innerHTML = `
             <div class="transpose-controls">
                 <button class="btn-transpose" onclick="transposeDown()">−</button>
-                <div class="transpose-value">${data.transpose > 0 ? '+' : ''}${data.transpose || 0}</div>
+                <div class="transpose-value">${transpose > 0 ? '+' : ''}${transpose}</div>
                 <button class="btn-transpose" onclick="transposeUp()">+</button>
             </div>
             <div class="transpose-label">Transpose</div>

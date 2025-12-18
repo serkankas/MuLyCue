@@ -13,6 +13,25 @@ let duration = 0;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Player-panels.js: DOM loaded');
+    
+    // Wait for panel manager to be ready
+    const checkPanelManager = () => {
+        if (window.panelManager) {
+            console.log('Panel Manager ready, initializing player...');
+            initializePlayer();
+        } else {
+            console.log('Waiting for Panel Manager...');
+            setTimeout(checkPanelManager, 50);
+        }
+    };
+    
+    checkPanelManager();
+});
+
+function initializePlayer() {
+    console.log('Initializing player...');
+    
     // Connect WebSocket
     ws = new MuLyCueWebSocket();
     ws.connect();
@@ -29,7 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Update panel toggles based on loaded panels
     updatePanelToggles();
-});
+    
+    console.log('Player initialized successfully');
+}
 
 function setupWebSocketCallbacks() {
     ws.on('position_update', (data) => {

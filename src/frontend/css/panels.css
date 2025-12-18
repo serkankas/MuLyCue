@@ -12,6 +12,7 @@
     bottom: 80px;
     overflow: hidden;
     background: var(--bg-primary);
+    z-index: 1;
 }
 
 /* Base Panel Styles */
@@ -373,7 +374,7 @@
 /* Layout Controls */
 .layout-controls {
     position: fixed;
-    top: 10px;
+    top: 70px;
     right: 10px;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
@@ -381,6 +382,9 @@
     padding: 12px;
     box-shadow: var(--shadow-lg);
     z-index: 1000;
+    max-width: 250px;
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
 }
 
 .layout-controls h3 {
