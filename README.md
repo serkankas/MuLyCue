@@ -317,9 +317,27 @@ MuLyCue supports comprehensive chord notation:
 
 ---
 
+## 🐛 Known Limitations (v0.1.0)
+
+### Current Limitations
+- **Seeking:** Audio seeking is not yet supported with pygame backend. Will be implemented in v2.0 with VLC backend.
+- **Audio Formats:** Currently supports MP3, OGG, WAV. Other formats may require additional codecs.
+- **Duration Detection:** Uses mutagen library for MP3 duration calculation.
+- **Waveform Visualization:** Not yet implemented.
+- **Auto-sync:** Not yet implemented.
+- **Single Audio Track:** Only one audio track per song.
+- **No Cloud Sync:** Local storage only.
+
+### Workarounds
+- **For seeking:** Use stop/play to restart from beginning, or wait for v2.0
+- **For other formats:** Convert to MP3/OGG using ffmpeg or similar tools
+
+---
+
 ## 🗺️ Roadmap
 
-### Version 0.2.0
+### Version 0.2.0 (Next Release)
+- [ ] **Audio seeking support** (python-vlc backend)
 - [ ] Waveform visualization in editor
 - [ ] Auto BPM detection
 - [ ] Chord diagram display
