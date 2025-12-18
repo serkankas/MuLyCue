@@ -134,6 +134,37 @@ def test_chord_root_from_string():
     assert ChordRoot.from_string("Gb") == ChordRoot.Fs
 
 
+def test_complex_chords():
+    """Test complex chord parsing"""
+    test_cases = [
+        ("C#m7b5", ChordRoot.Cs, "m7b5", None),
+        ("Bbmaj7", ChordRoot.As, "maj7", None),
+        ("F#m/E", ChordRoot.Fs, "m", ChordRoot.E),
+        ("Db7/Ab", ChordRoot.Cs, "7", ChordRoot.Gs),
+        ("Asus4", ChordRoot.A, "sus4", None),
+        ("Cadd9", ChordRoot.C, "add9", None),
+    ]
+    
+    for chord_str, expected_root, expected_suffix, expected_bass in test_cases:
+        chord = Chord.from_string(chord_str)
+        assert chord is not None, f"Failed to parse {chord_str}"
+        assert chord.root == expected_root, f"Wrong root for {chord_str}"
+        assert chord.suffix == expected_suffix, f"Wrong suffix for {chord_str}"
+        assert chord.bass == expected_bass, f"Wrong bass for {chord_str}"
+
+
+def test_chord_transpose_preserves_suffix():
+    """Test that transposition preserves chord suffix"""
+    complex_chords = ["Cm7b5", "Fmaj7", "Asus4", "Gadd9"]
+    
+    for chord_str in complex_chords:
+        chord = Chord.from_string(chord_str)
+        transposed = chord.transpose(5)
+        
+        # Suffix should be preserved
+        assert chord.suffix == transposed.suffix, f"Suffix changed for {chord_str}"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
 
