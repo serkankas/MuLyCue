@@ -12,6 +12,15 @@ A powerful desktop application for synchronized lyrics, chords, and timing displ
 
 ## ✨ Features
 
+### 🎨 Professional Panel System (NEW!)
+- **OBS-Style Interface**: Drag-and-drop panels like professional streaming software
+- **7 Panel Types**: Lyrics, Chords, BPM, Beat Counter, Section, Timeline, Transpose
+- **Multi-Monitor Support**: Pop out panels to separate windows
+- **Layout Presets**: Quick layouts for different roles (Vocalist, Guitarist, Drummer)
+- **Custom Layouts**: Save and share your own layouts
+- **Real-Time Sync**: All windows stay synchronized
+- **Snap to Edges**: Optional edge snapping for clean layouts
+
 ### 🎼 Editor Mode
 - **Import Audio Files**: Support for MP3, OGG, and WAV formats
 - **Lyrics Management**: Paste and organize lyrics into sections (Verse, Chorus, Bridge, etc.)
@@ -20,14 +29,17 @@ A powerful desktop application for synchronized lyrics, chords, and timing displ
 - **Visual Timeline**: See your song structure at a glance
 - **Auto-Sync** (Coming Soon): Automatic beat detection and timing
 
-### ▶️ Player Mode
-- **Real-Time Display**: Large, readable lyrics synchronized with audio playback
-- **Chord Progression**: Current chord displayed prominently
-- **BPM & Beat Counter**: Visual beat indicator (1-2-3-4) synchronized with tempo
+### ▶️ Player Mode (Professional Panel System)
+- **Multi-Window Panel System**: OBS Studio/DAW-style drag-and-drop panels
+- **Modular Panels**: Lyrics, Chords, BPM, Beat Counter, Section, Timeline, Transpose
+- **Drag & Drop**: Freely position panels anywhere on screen
+- **Resizable Panels**: Drag corners/edges to resize
+- **Pop-Out Windows**: Detach panels to separate windows (perfect for dual/triple monitors)
+- **Layout Presets**: Vocalist, Guitarist, Drummer, Minimal, Fullscreen
+- **Save/Load Layouts**: Custom layouts with export/import (JSON)
+- **Real-Time Sync**: All panels sync across multiple windows via BroadcastChannel
 - **Live Transpose**: Change key on-the-fly without stopping playback
-- **WebSocket Sync**: Real-time updates across multiple connected displays
-- **Customizable Display**: Adjust font size, theme, and display mode
-- **Multiple Themes**: Dark, Light, and High Contrast modes
+- **Professional Grade**: Designed for live performances
 
 ### 🎹 Advanced Features
 - **Smart Transposition**: Transpose chords while preserving quality (m7 stays m7)
