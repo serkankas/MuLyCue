@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuLyCue - Panel Window</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/panels.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #panel-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="panel-container"></div>
+
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/panels.js"></script>
+    <script src="/static/js/panel-manager.js"></script>
+    <script>
+        // Initialize panel manager for detached window
+        document.addEventListener('DOMContentLoaded', () => {
+            window.panelManager = new PanelManager();
+            
+            // Listen for panel config from parent window
+            window.addEventListener('message', (event) => {
+                if (event.data.type === 'panel-config') {
+                    const { panelType, config } = event.data;
+                    window.panelManager.addPanel(panelType, {
+                        ...config,
+                        x: 0,
+                        y: 0,
+                        width: window.innerWidth,
+                        height: window.innerHeight
+                    });
+                }
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const panels = window.panelManager.getAllPanels();
+                if (panels.length > 0) {
+                    const panel = panels[0];
+                    panel.config.width = window.innerWidth;
+                    panel.config.height = window.innerHeight;
+                    panel.updateSize();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

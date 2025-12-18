@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuLyCue - Professional Player</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/panels.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="player-header" style="position: fixed; top: 0; left: 0; right: 0; height: 60px; z-index: 999;">
+        <div class="header-left">
+            <button onclick="window.location.href='/static/index.html'" class="btn-back">← Back</button>
+            <div class="song-info">
+                <h1 id="songTitle">No Song Loaded</h1>
+                <p id="songArtist">-</p>
+            </div>
+        </div>
+        
+        <div class="header-center">
+            <div class="connection-status">
+                <span id="wsStatus" class="status-indicator">⚫</span>
+                <span id="wsText">Disconnected</span>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button onclick="showSongSelector()" class="btn-select">📚 Select Song</button>
+            <button onclick="toggleLayoutControls()" class="btn-settings">⚙️ Layout</button>
+        </div>
+    </header>
+
+    <!-- Panel Container -->
+    <div id="panel-container"></div>
+
+    <!-- Layout Controls (Hidden by default) -->
+    <div id="layoutControls" class="layout-controls" style="display: none;">
+        <h3>⚙️ Layout Controls</h3>
+        
+        <div class="layout-presets">
+            <label>Presets:</label>
+            <select id="presetSelect" onchange="loadPreset(this.value)">
+                <option value="">Select Preset...</option>
+                <option value="default">Default</option>
+                <option value="vocalist">Vocalist</option>
+                <option value="guitarist">Guitarist</option>
+                <option value="drummer">Drummer</option>
+                <option value="minimal">Minimal</option>
+                <option value="fullscreen">Fullscreen</option>
+            </select>
+        </div>
+        
+        <div class="panel-toggles">
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-lyrics" checked onchange="togglePanel('lyrics', this.checked)">
+                <label for="toggle-lyrics">📝 Lyrics</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-chords" checked onchange="togglePanel('chords', this.checked)">
+                <label for="toggle-chords">🎸 Chords</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-bpm" checked onchange="togglePanel('bpm', this.checked)">
+                <label for="toggle-bpm">🥁 BPM</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-beat" onchange="togglePanel('beat', this.checked)">
+                <label for="toggle-beat">⏱️ Beat</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-section" onchange="togglePanel('section', this.checked)">
+                <label for="toggle-section">🎬 Section</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-timeline" checked onchange="togglePanel('timeline', this.checked)">
+                <label for="toggle-timeline">▶️ Timeline</label>
+            </div>
+            <div class="panel-toggle">
+                <input type="checkbox" id="toggle-transpose" onchange="togglePanel('transpose', this.checked)">
+                <label for="toggle-transpose">🎹 Transpose</label>
+            </div>
+        </div>
+        
+        <div class="layout-actions">
+            <button onclick="window.panelManager.openNewWindow()">+ New Window</button>
+            <button onclick="window.panelManager.saveLayout()">💾 Save Layout</button>
+            <button onclick="window.panelManager.resetLayout()">🔄 Reset</button>
+            <button onclick="window.panelManager.exportLayout()">📤 Export</button>
+            <label class="btn" style="cursor: pointer; text-align: center;">
+                📥 Import
+                <input type="file" accept=".json" onchange="importLayout(this.files[0])" style="display: none;">
+            </label>
+            <label>
+                <input type="checkbox" id="snapToEdges" checked onchange="toggleSnap(this.checked)">
+                Snap to edges
+            </label>
+        </div>
+    </div>
+
+    <!-- Control Bar -->
+    <footer class="player-controls" style="position: fixed; bottom: 0; left: 0; right: 0; height: 80px; z-index: 999;">
+        <div class="controls-left">
+            <button onclick="skipBackward()" class="btn-control">⏮</button>
+            <button onclick="togglePlay()" id="playPauseBtn" class="btn-control btn-play">▶️</button>
+            <button onclick="stop()" class="btn-control">⏹</button>
+            <button onclick="skipForward()" class="btn-control">⏭</button>
+        </div>
+
+        <div class="controls-center">
+            <div class="progress-bar">
+                <input type="range" id="progressSlider" min="0" max="100" value="0" disabled
+                       title="Seeking not available in v0.1.0">
+                <div class="time-display">
+                    <span id="currentTimeDisplay">00:00</span>
+                    <span id="durationDisplay">00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-right">
+            <div class="volume-control">
+                <span>🔊</span>
+                <input type="range" id="volumeSlider" min="0" max="100" value="100" 
+                       oninput="setVolume(this.value)">
+            </div>
+        </div>
+    </footer>
+
+    <!-- Song Selector (Hidden by default) -->
+    <div id="songSelector" class="song-selector" style="display: none;">
+        <div class="selector-content">
+            <h2>Select Song</h2>
+            <button onclick="showSongSelector()" class="btn-close">✖</button>
+            
+            <input type="text" id="songSearch" placeholder="Search songs..." 
+                   onkeyup="filterSongList()">
+            
+            <div id="songListContainer" class="song-list-container">
+                <p class="loading">Loading songs...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/websocket.js"></script>
+    <script src="/static/js/panels.js"></script>
+    <script src="/static/js/panel-manager.js"></script>
+    <script src="/static/js/player-panels.js"></script>
+</body>
+</html>
+

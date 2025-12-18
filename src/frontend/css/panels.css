@@ -1,0 +1,480 @@
+/**
+ * Panel System CSS for MuLyCue
+ * Professional drag-and-drop panel styling
+ */
+
+/* Panel Container */
+#panel-container {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 80px;
+    overflow: hidden;
+    background: var(--bg-primary);
+}
+
+/* Base Panel Styles */
+.panel {
+    position: absolute;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+}
+
+.panel:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+}
+
+.panel.dragging {
+    opacity: 0.9;
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+    border-color: var(--primary-color);
+}
+
+.panel.resizing {
+    opacity: 0.95;
+}
+
+/* Panel Header */
+.panel-header {
+    background: var(--bg-tertiary);
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    user-select: none;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.panel-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.panel-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-panel-control {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-panel-control:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.btn-close:hover {
+    background: var(--error-color);
+    color: white;
+}
+
+/* Panel Content */
+.panel-content {
+    flex: 1;
+    padding: 16px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Resize Handles */
+.resize-handle {
+    position: absolute;
+    background: transparent;
+    z-index: 10;
+}
+
+.resize-handle.resize-se {
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    cursor: nwse-resize;
+}
+
+.resize-handle.resize-se::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, transparent 50%, var(--text-muted) 50%);
+    opacity: 0.5;
+}
+
+.resize-handle.resize-s {
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    height: 8px;
+    cursor: ns-resize;
+}
+
+.resize-handle.resize-e {
+    top: 20px;
+    right: 0;
+    bottom: 20px;
+    width: 8px;
+    cursor: ew-resize;
+}
+
+/* Lyrics Panel */
+.panel-lyrics .panel-content {
+    padding: 24px;
+}
+
+.lyrics-previous,
+.lyrics-next {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    opacity: 0.5;
+    text-align: center;
+    margin: 8px 0;
+}
+
+.lyrics-current {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    margin: 16px 0;
+    text-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+    animation: lyricFadeIn 0.3s ease;
+}
+
+@keyframes lyricFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Chords Panel */
+.panel-chords .panel-content {
+    gap: 12px;
+}
+
+.chord-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.chord-current {
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 2px 15px rgba(99, 102, 241, 0.4);
+    animation: chordPulse 0.3s ease;
+}
+
+.chord-next {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+@keyframes chordPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* BPM Panel */
+.panel-bpm .panel-content {
+    gap: 8px;
+}
+
+.bpm-display {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+    font-family: 'Courier New', monospace;
+}
+
+.bpm-label {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Beat Panel */
+.panel-beat .panel-content {
+    padding: 32px;
+}
+
+.beat-counter {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+}
+
+.beat-dot {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 3px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: all 0.1s ease;
+}
+
+.beat-dot.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    transform: scale(1.2);
+    box-shadow: 0 0 30px var(--primary-color);
+    animation: beatPulse 0.2s ease;
+}
+
+@keyframes beatPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+/* Section Panel */
+.panel-section .panel-content {
+    padding: 20px;
+}
+
+.section-name {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+}
+
+/* Timeline Panel */
+.panel-timeline .panel-content {
+    padding: 16px;
+    justify-content: center;
+}
+
+.timeline-progress {
+    width: 100%;
+}
+
+.timeline-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.timeline-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    transition: width 0.1s linear;
+}
+
+.timeline-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Transpose Panel */
+.panel-transpose .panel-content {
+    gap: 12px;
+}
+
+.transpose-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.transpose-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    min-width: 100px;
+    text-align: center;
+}
+
+.btn-transpose {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-transpose:hover {
+    background: var(--primary-hover);
+    transform: scale(1.1);
+}
+
+.btn-transpose:active {
+    transform: scale(0.95);
+}
+
+.transpose-label {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Layout Controls */
+.layout-controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+}
+
+.layout-controls h3 {
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.panel-toggles {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.panel-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-toggle input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.panel-toggle label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.layout-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.layout-actions button {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.layout-presets {
+    margin-bottom: 12px;
+}
+
+.layout-presets select {
+    width: 100%;
+    padding: 6px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .lyrics-current {
+        font-size: 2rem;
+    }
+    
+    .chord-current {
+        font-size: 3rem;
+    }
+    
+    .bpm-display {
+        font-size: 4rem;
+    }
+    
+    .beat-dot {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+}
+
+/* Scrollbar */
+.panel-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: var(--bg-hover);
+    border-radius: 4px;
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
