@@ -11,6 +11,7 @@ import shutil
 import json
 
 from ..models import Song, MLCFormat
+from ..models.setlist import Setlist, SetlistSong, SetlistSettings
 from ..core import AudioEngine
 
 router = APIRouter(prefix="/api", tags=["api"])
@@ -19,9 +20,15 @@ router = APIRouter(prefix="/api", tags=["api"])
 SONGS_DIR = Path("data/songs")
 SONGS_DIR.mkdir(parents=True, exist_ok=True)
 
+SETLISTS_DIR = Path("data/setlists")
+SETLISTS_DIR.mkdir(parents=True, exist_ok=True)
+
 # Audio engine instance
 audio_engine = AudioEngine()
 current_song: Optional[Song] = None
+
+# Queue manager (will be initialized with WebSocket manager)
+queue_manager = None
 
 
 @router.get("/songs")
@@ -314,4 +321,267 @@ async def get_playback_status():
         "position": audio_engine.get_position(),
         "duration": audio_engine.get_duration()
     }
+
+
+# ============================================================================
+# SETLIST / QUEUE ENDPOINTS
+# ============================================================================
+
+@router.post("/setlists")
+async def create_setlist(setlist: Setlist):
+    """
+    Create and save a new setlist.
+    
+    Args:
+        setlist: Setlist data
+        
+    Returns:
+        Created setlist with ID
+    """
+    try:
+        # Generate filename from name
+        filename = setlist.name.lower().replace(' ', '_').replace('/', '_')
+        filename = f"{filename}.json"
+        filepath = SETLISTS_DIR / filename
+        
+        # Save setlist
+        with open(filepath, 'w') as f:
+            f.write(setlist.json(indent=2))
+        
+        return {
+            "id": filename,
+            "name": setlist.name,
+            "message": "Setlist created successfully"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating setlist: {str(e)}")
+
+
+@router.get("/setlists")
+async def list_setlists():
+    """
+    List all saved setlists.
+    
+    Returns:
+        List of setlist metadata
+    """
+    setlists = []
+    
+    for setlist_file in SETLISTS_DIR.glob("*.json"):
+        try:
+            with open(setlist_file, 'r') as f:
+                data = json.load(f)
+                setlists.append({
+                    "id": setlist_file.name,
+                    "name": data.get("name"),
+                    "description": data.get("description"),
+                    "song_count": len(data.get("songs", [])),
+                    "total_duration": sum(s.get("duration", 0) for s in data.get("songs", [])),
+                    "created_at": data.get("created_at")
+                })
+        except Exception as e:
+            print(f"Error loading {setlist_file}: {e}")
+    
+    return {"setlists": setlists}
+
+
+@router.get("/setlists/{setlist_id}")
+async def get_setlist(setlist_id: str):
+    """
+    Get setlist details.
+    
+    Args:
+        setlist_id: Setlist filename
+        
+    Returns:
+        Complete setlist data
+    """
+    setlist_file = SETLISTS_DIR / setlist_id
+    
+    if not setlist_file.exists():
+        raise HTTPException(status_code=404, detail="Setlist not found")
+    
+    try:
+        with open(setlist_file, 'r') as f:
+            setlist_data = json.load(f)
+        return setlist_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error loading setlist: {str(e)}")
+
+
+@router.put("/setlists/{setlist_id}")
+async def update_setlist(setlist_id: str, setlist: Setlist):
+    """
+    Update an existing setlist.
+    
+    Args:
+        setlist_id: Setlist filename
+        setlist: Updated setlist data
+        
+    Returns:
+        Success message
+    """
+    setlist_file = SETLISTS_DIR / setlist_id
+    
+    if not setlist_file.exists():
+        raise HTTPException(status_code=404, detail="Setlist not found")
+    
+    try:
+        with open(setlist_file, 'w') as f:
+            f.write(setlist.json(indent=2))
+        
+        return {"message": "Setlist updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error updating setlist: {str(e)}")
+
+
+@router.delete("/setlists/{setlist_id}")
+async def delete_setlist(setlist_id: str):
+    """
+    Delete a setlist.
+    
+    Args:
+        setlist_id: Setlist filename
+        
+    Returns:
+        Success message
+    """
+    setlist_file = SETLISTS_DIR / setlist_id
+    
+    if not setlist_file.exists():
+        raise HTTPException(status_code=404, detail="Setlist not found")
+    
+    try:
+        setlist_file.unlink()
+        return {"message": "Setlist deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting setlist: {str(e)}")
+
+
+@router.post("/setlists/{setlist_id}/load")
+async def load_setlist_to_queue(setlist_id: str):
+    """
+    Load setlist into queue manager.
+    
+    Args:
+        setlist_id: Setlist filename
+        
+    Returns:
+        Success message with setlist info
+    """
+    global queue_manager
+    
+    if not queue_manager:
+        raise HTTPException(status_code=500, detail="Queue manager not initialized")
+    
+    setlist_file = SETLISTS_DIR / setlist_id
+    
+    if not setlist_file.exists():
+        raise HTTPException(status_code=404, detail="Setlist not found")
+    
+    try:
+        with open(setlist_file, 'r') as f:
+            setlist_data = json.load(f)
+        
+        setlist = Setlist(**setlist_data)
+        queue_manager.load_setlist(setlist)
+        
+        return {
+            "message": "Setlist loaded successfully",
+            "setlist": setlist.name,
+            "song_count": len(setlist.songs)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error loading setlist: {str(e)}")
+
+
+@router.post("/queue/next")
+async def queue_next():
+    """Skip to next song in queue."""
+    global queue_manager
+    
+    if not queue_manager:
+        raise HTTPException(status_code=500, detail="Queue manager not initialized")
+    
+    try:
+        await queue_manager.next_song()
+        return {"message": "Skipped to next song"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
+@router.post("/queue/previous")
+async def queue_previous():
+    """Go to previous song in queue."""
+    global queue_manager
+    
+    if not queue_manager:
+        raise HTTPException(status_code=500, detail="Queue manager not initialized")
+    
+    try:
+        await queue_manager.previous_song()
+        return {"message": "Went to previous song"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
+@router.post("/queue/jump/{index}")
+async def queue_jump(index: int):
+    """
+    Jump to specific song in queue.
+    
+    Args:
+        index: Target song index
+    """
+    global queue_manager
+    
+    if not queue_manager:
+        raise HTTPException(status_code=500, detail="Queue manager not initialized")
+    
+    try:
+        await queue_manager.jump_to_song(index)
+        return {"message": f"Jumped to song {index}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
+@router.get("/queue/status")
+async def queue_status():
+    """Get current queue status."""
+    global queue_manager
+    
+    if not queue_manager:
+        raise HTTPException(status_code=500, detail="Queue manager not initialized")
+    
+    return queue_manager.get_setlist_info()
+
+
+@router.post("/queue/play")
+async def queue_play():
+    """Start playing current song in queue."""
+    global queue_manager
+    
+    if not queue_manager:
+        raise HTTPException(status_code=500, detail="Queue manager not initialized")
+    
+    try:
+        await queue_manager.play_current()
+        return {"message": "Started playback"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+
+@router.post("/queue/stop")
+async def queue_stop():
+    """Stop queue playback."""
+    global queue_manager
+    
+    if not queue_manager:
+        raise HTTPException(status_code=500, detail="Queue manager not initialized")
+    
+    try:
+        queue_manager.stop()
+        return {"message": "Stopped playback"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
 

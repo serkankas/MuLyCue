@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "name": "Coffee Shop Gig",
+  "description": "Acoustic set for downtown venue - relaxed atmosphere",
+  "created_at": "2024-12-19T20:00:00Z",
+  "settings": {
+    "auto_advance": true,
+    "gap_seconds": 5,
+    "loop": false,
+    "shuffle": false,
+    "countdown": true
+  },
+  "songs": [
+    {
+      "id": "sample_song.mlc",
+      "title": "Sample Song",
+      "artist": "MuLyCue Demo",
+      "duration": 180.0,
+      "notes": "Demo song from examples",
+      "transpose": 0,
+      "key": "C",
+      "bpm": 120
+    }
+  ],
+  "tags": ["acoustic", "coffee-shop", "chill"]
+}
+
