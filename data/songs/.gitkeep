@@ -1,0 +1,3 @@
+# This file ensures the songs directory is tracked by git
+# Song files (.mlc and .mp3) are ignored by .gitignore
+

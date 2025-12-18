@@ -1,0 +1,259 @@
+{
+  "version": "1.0.0",
+  "meta": {
+    "title": "Sample Song",
+    "artist": "MuLyCue Demo",
+    "album": "Examples",
+    "year": 2024,
+    "genre": "Pop",
+    "bpm": 120,
+    "key": "C",
+    "time_signature": "4/4",
+    "transpose": 0,
+    "capo": 0,
+    "duration": 180.0,
+    "audio_file": null,
+    "prefer_notation": "sharp"
+  },
+  "sections": [
+    {
+      "name": "Intro",
+      "order": 1,
+      "start_time": 0.0,
+      "end_time": 8.0,
+      "entries": [
+        {
+          "word": null,
+          "start_time": 0.0,
+          "end_time": 4.0,
+          "chords": "C"
+        },
+        {
+          "word": null,
+          "start_time": 4.0,
+          "end_time": 8.0,
+          "chords": "G"
+        }
+      ]
+    },
+    {
+      "name": "Verse 1",
+      "order": 2,
+      "start_time": 8.0,
+      "end_time": 24.0,
+      "entries": [
+        {
+          "word": "This",
+          "start_time": 8.0,
+          "end_time": 8.5,
+          "chords": "C"
+        },
+        {
+          "word": "is",
+          "start_time": 8.5,
+          "end_time": 9.0,
+          "chords": null
+        },
+        {
+          "word": "a",
+          "start_time": 9.0,
+          "end_time": 9.5,
+          "chords": null
+        },
+        {
+          "word": "sample",
+          "start_time": 9.5,
+          "end_time": 10.5,
+          "chords": "Am"
+        },
+        {
+          "word": "song",
+          "start_time": 10.5,
+          "end_time": 12.0,
+          "chords": null
+        },
+        {
+          "word": "To",
+          "start_time": 12.0,
+          "end_time": 12.5,
+          "chords": "F"
+        },
+        {
+          "word": "demonstrate",
+          "start_time": 12.5,
+          "end_time": 14.0,
+          "chords": null
+        },
+        {
+          "word": "MuLyCue",
+          "start_time": 14.0,
+          "end_time": 16.0,
+          "chords": "G"
+        }
+      ]
+    },
+    {
+      "name": "Chorus",
+      "order": 3,
+      "start_time": 24.0,
+      "end_time": 40.0,
+      "entries": [
+        {
+          "word": "Lyrics",
+          "start_time": 24.0,
+          "end_time": 26.0,
+          "chords": "C"
+        },
+        {
+          "word": "and",
+          "start_time": 26.0,
+          "end_time": 27.0,
+          "chords": null
+        },
+        {
+          "word": "chords",
+          "start_time": 27.0,
+          "end_time": 28.0,
+          "chords": "Am"
+        },
+        {
+          "word": "in",
+          "start_time": 28.0,
+          "end_time": 29.0,
+          "chords": null
+        },
+        {
+          "word": "perfect",
+          "start_time": 29.0,
+          "end_time": 30.0,
+          "chords": "F"
+        },
+        {
+          "word": "sync",
+          "start_time": 30.0,
+          "end_time": 32.0,
+          "chords": "G"
+        },
+        {
+          "word": "Real-time",
+          "start_time": 32.0,
+          "end_time": 34.0,
+          "chords": "C"
+        },
+        {
+          "word": "display",
+          "start_time": 34.0,
+          "end_time": 36.0,
+          "chords": "Am"
+        },
+        {
+          "word": "for",
+          "start_time": 36.0,
+          "end_time": 37.0,
+          "chords": "F"
+        },
+        {
+          "word": "live",
+          "start_time": 37.0,
+          "end_time": 38.0,
+          "chords": null
+        },
+        {
+          "word": "performance",
+          "start_time": 38.0,
+          "end_time": 40.0,
+          "chords": "G"
+        }
+      ]
+    },
+    {
+      "name": "Bridge",
+      "order": 4,
+      "start_time": 40.0,
+      "end_time": 56.0,
+      "entries": [
+        {
+          "word": "Transpose",
+          "start_time": 40.0,
+          "end_time": 42.0,
+          "chords": "Am"
+        },
+        {
+          "word": "on",
+          "start_time": 42.0,
+          "end_time": 43.0,
+          "chords": null
+        },
+        {
+          "word": "the",
+          "start_time": 43.0,
+          "end_time": 44.0,
+          "chords": null
+        },
+        {
+          "word": "fly",
+          "start_time": 44.0,
+          "end_time": 46.0,
+          "chords": "F"
+        },
+        {
+          "word": "BPM",
+          "start_time": 46.0,
+          "end_time": 48.0,
+          "chords": "C"
+        },
+        {
+          "word": "and",
+          "start_time": 48.0,
+          "end_time": 49.0,
+          "chords": null
+        },
+        {
+          "word": "beat",
+          "start_time": 49.0,
+          "end_time": 50.0,
+          "chords": null
+        },
+        {
+          "word": "tracking",
+          "start_time": 50.0,
+          "end_time": 52.0,
+          "chords": "G"
+        },
+        {
+          "word": "Everything",
+          "start_time": 52.0,
+          "end_time": 54.0,
+          "chords": "Dm"
+        },
+        {
+          "word": "synchronized",
+          "start_time": 54.0,
+          "end_time": 56.0,
+          "chords": "G7"
+        }
+      ]
+    },
+    {
+      "name": "Outro",
+      "order": 5,
+      "start_time": 56.0,
+      "end_time": 64.0,
+      "entries": [
+        {
+          "word": null,
+          "start_time": 56.0,
+          "end_time": 60.0,
+          "chords": "C"
+        },
+        {
+          "word": null,
+          "start_time": 60.0,
+          "end_time": 64.0,
+          "chords": "G C"
+        }
+      ]
+    }
+  ]
+}
+
