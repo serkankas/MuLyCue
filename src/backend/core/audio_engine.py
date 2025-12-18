@@ -51,9 +51,30 @@ class AudioEngine:
         self._current_file = audio_file
         self._position = 0.0
         
-        # Get duration (pygame doesn't provide this directly, so we'll need to calculate)
-        # For now, set a default. In production, use mutagen or similar library
-        self._duration = 0.0
+        # Get duration using mutagen
+        try:
+            from mutagen.mp3 import MP3
+            from mutagen.oggvorbis import OggVorbis
+            from mutagen.wave import WAVE
+            
+            # Try different formats
+            try:
+                audio = MP3(str(path))
+                self._duration = audio.info.length
+            except:
+                try:
+                    audio = OggVorbis(str(path))
+                    self._duration = audio.info.length
+                except:
+                    try:
+                        audio = WAVE(str(path))
+                        self._duration = audio.info.length
+                    except:
+                        print(f"Warning: Could not detect audio format for duration")
+                        self._duration = 0.0
+        except Exception as e:
+            print(f"Warning: Could not get audio duration: {e}")
+            self._duration = 0.0
     
     def play(self) -> None:
         """Start or resume playback."""
@@ -79,32 +100,29 @@ class AudioEngine:
     
     def stop(self) -> None:
         """Stop playback and reset position."""
+        self._stop_position_tracking()  # Stop tracking FIRST
         pygame.mixer.music.stop()
         self._is_playing = False
         self._is_paused = False
         self._position = 0.0
-        self._stop_position_tracking()
     
     def seek(self, position: float) -> None:
         """
         Seek to a specific position in seconds.
         
+        NOTE: pygame.mixer doesn't support reliable seeking.
+        This will be implemented in v2.0 with python-vlc backend.
+        
         Args:
             position: Position in seconds
+            
+        Raises:
+            NotImplementedError: Seeking not supported in current version
         """
-        if self._current_file is None:
-            raise RuntimeError("No audio file loaded")
-        
-        was_playing = self._is_playing
-        
-        # Stop current playback
-        pygame.mixer.music.stop()
-        self._position = position
-        
-        # Resume if was playing
-        if was_playing:
-            pygame.mixer.music.play(start=position)
-            self._is_playing = True
+        raise NotImplementedError(
+            "Seeking is not yet supported with current audio backend. "
+            "This feature will be available in version 2.0 with VLC backend."
+        )
     
     def get_position(self) -> float:
         """
