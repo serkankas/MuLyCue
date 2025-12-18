@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuLyCue - Music Lyrics & Chords Cue System</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 MuLyCue</h1>
+            <p class="subtitle">Music Lyrics & Chords Cue System</p>
+            <p class="version">v0.1.0 Alpha</p>
+        </header>
+
+        <main>
+            <div class="mode-selector">
+                <div class="mode-card" onclick="window.location.href='/static/editor.html'">
+                    <div class="mode-icon">✏️</div>
+                    <h2>Editor Mode</h2>
+                    <p>Create and edit song files with synchronized lyrics, chords, and timing</p>
+                    <ul>
+                        <li>Import MP3 files</li>
+                        <li>Add lyrics and sections</li>
+                        <li>Time-sync words</li>
+                        <li>Add chords</li>
+                    </ul>
+                </div>
+
+                <div class="mode-card" onclick="window.location.href='/static/player.html'">
+                    <div class="mode-icon">▶️</div>
+                    <h2>Player Mode</h2>
+                    <p>Real-time display of lyrics and chords for live performances</p>
+                    <ul>
+                        <li>Synchronized lyrics display</li>
+                        <li>Chord progression</li>
+                        <li>BPM & beat counter</li>
+                        <li>Transpose on-the-fly</li>
+                    </ul>
+                </div>
+
+                <div class="mode-card" onclick="showLibrary()">
+                    <div class="mode-icon">📚</div>
+                    <h2>Song Library</h2>
+                    <p>Browse and manage your song collection</p>
+                    <ul>
+                        <li>View all songs</li>
+                        <li>Search and filter</li>
+                        <li>Quick access</li>
+                        <li>Manage files</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="library" class="library-section" style="display: none;">
+                <h2>Song Library</h2>
+                <div class="library-controls">
+                    <input type="text" id="searchInput" placeholder="Search songs..." onkeyup="filterSongs()">
+                    <button onclick="refreshLibrary()">🔄 Refresh</button>
+                    <button onclick="hideLibrary()">✖ Close</button>
+                </div>
+                <div id="songList" class="song-list">
+                    <p class="loading">Loading songs...</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 MuLyCue Team | <a href="https://github.com/mulycue/mulycue" target="_blank">GitHub</a></p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+    <script>
+        // Library functions
+        let allSongs = [];
+
+        async function showLibrary() {
+            document.getElementById('library').style.display = 'block';
+            await loadSongs();
+        }
+
+        function hideLibrary() {
+            document.getElementById('library').style.display = 'none';
+        }
+
+        async function loadSongs() {
+            try {
+                const response = await fetch('/api/songs');
+                const data = await response.json();
+                allSongs = data.songs || [];
+                displaySongs(allSongs);
+            } catch (error) {
+                document.getElementById('songList').innerHTML = 
+                    '<p class="error">Error loading songs: ' + error.message + '</p>';
+            }
+        }
+
+        function displaySongs(songs) {
+            const songList = document.getElementById('songList');
+            
+            if (songs.length === 0) {
+                songList.innerHTML = '<p class="empty">No songs found. Create one in Editor mode!</p>';
+                return;
+            }
+
+            songList.innerHTML = songs.map(song => `
+                <div class="song-item">
+                    <div class="song-info">
+                        <h3>${song.title}</h3>
+                        <p class="artist">${song.artist}</p>
+                        <p class="meta">Key: ${song.key} | BPM: ${song.bpm} | Duration: ${formatTime(song.duration)}</p>
+                    </div>
+                    <div class="song-actions">
+                        <button onclick="openInEditor('${song.id}')">✏️ Edit</button>
+                        <button onclick="openInPlayer('${song.id}')">▶️ Play</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterSongs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allSongs.filter(song => 
+                song.title.toLowerCase().includes(searchTerm) ||
+                song.artist.toLowerCase().includes(searchTerm)
+            );
+            displaySongs(filtered);
+        }
+
+        function refreshLibrary() {
+            loadSongs();
+        }
+
+        function openInEditor(songId) {
+            window.location.href = `/static/editor.html?song=${songId}`;
+        }
+
+        function openInPlayer(songId) {
+            window.location.href = `/static/player.html?song=${songId}`;
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+    </script>
+</body>
+</html>
+
