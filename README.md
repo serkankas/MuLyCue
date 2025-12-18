@@ -12,7 +12,7 @@ A powerful desktop application for synchronized lyrics, chords, and timing displ
 
 ## ✨ Features
 
-### 🎨 Professional Panel System (NEW!)
+### 🎨 Professional Panel System
 - **OBS-Style Interface**: Drag-and-drop panels like professional streaming software
 - **7 Panel Types**: Lyrics, Chords, BPM, Beat Counter, Section, Timeline, Transpose
 - **Multi-Monitor Support**: Pop out panels to separate windows
@@ -20,6 +20,18 @@ A powerful desktop application for synchronized lyrics, chords, and timing displ
 - **Custom Layouts**: Save and share your own layouts
 - **Real-Time Sync**: All windows stay synchronized
 - **Snap to Edges**: Optional edge snapping for clean layouts
+
+### 📋 Setlist/Queue System (NEW!)
+- **Professional Setlist Management**: Create and manage playlists for live performances
+- **Auto-Advance**: Automatically load next song when current finishes
+- **Configurable Gaps**: Set time between songs (0-60 seconds) with countdown
+- **Manual Navigation**: Skip forward/backward or jump to any song
+- **Shuffle & Loop**: Shuffle playback order or loop entire setlist
+- **Progress Tracking**: Track elapsed time, remaining songs, and overall progress
+- **Performance Notes**: Add notes per song (capo, tuning, etc.)
+- **Per-Song Overrides**: Override transpose for individual songs
+- **Save/Load Setlists**: Save setlists for different gigs and venues
+- **Tags & Organization**: Organize setlists by venue, genre, or event type
 
 ### 🎼 Editor Mode
 - **Import Audio Files**: Support for MP3, OGG, and WAV formats
@@ -350,6 +362,7 @@ MuLyCue supports comprehensive chord notation:
 
 ### Version 0.2.0 (Next Release)
 - [ ] **Audio seeking support** (python-vlc backend)
+- [ ] **Setlist Manager UI** (frontend for setlist creation/editing)
 - [ ] Waveform visualization in editor
 - [ ] Auto BPM detection
 - [ ] Chord diagram display
@@ -357,9 +370,14 @@ MuLyCue supports comprehensive chord notation:
 
 ### Version 0.3.0
 - [ ] ML-based auto-sync
-- [ ] MIDI controller support
 - [ ] Multiple audio tracks
-- [ ] Setlist management
+- [ ] Setlist statistics and analytics
+- [ ] Cloud backup for setlists
+
+### Version 0.4.0
+- [ ] **MIDI controller support** (footswitch for setlist navigation)
+- [ ] Chord diagrams (guitar, piano, ukulele)
+- [ ] Backing track mixer
 
 ### Version 1.0.0
 - [ ] Multi-user collaboration
