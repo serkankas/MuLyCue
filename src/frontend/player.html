@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MuLyCue - Player</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/player.css">
+</head>
+<body>
+    <div class="player-container">
+        <!-- Top Bar -->
+        <header class="player-header">
+            <div class="header-left">
+                <button onclick="window.location.href='/static/index.html'" class="btn-back">← Back</button>
+                <div class="song-info">
+                    <h1 id="songTitle">No Song Loaded</h1>
+                    <p id="songArtist">-</p>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="connection-status">
+                    <span id="wsStatus" class="status-indicator">⚫</span>
+                    <span id="wsText">Disconnected</span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <button onclick="showSongSelector()" class="btn-select">📚 Select Song</button>
+                <button onclick="toggleSettings()" class="btn-settings">⚙️</button>
+            </div>
+        </header>
+
+        <!-- Main Display Area -->
+        <main class="player-main">
+            <!-- Current Section -->
+            <div class="section-display">
+                <h2 id="currentSection">-</h2>
+            </div>
+
+            <!-- Lyrics Display -->
+            <div class="lyrics-display">
+                <div id="previousLine" class="lyric-line previous">-</div>
+                <div id="currentLine" class="lyric-line current">Ready to play</div>
+                <div id="nextLine" class="lyric-line next">-</div>
+            </div>
+
+            <!-- Chord Display -->
+            <div class="chord-display">
+                <div class="chord-label">Current Chord:</div>
+                <div id="currentChord" class="chord-value">-</div>
+            </div>
+
+            <!-- Beat Indicator -->
+            <div class="beat-indicator">
+                <div class="beat-dots">
+                    <span class="beat-dot" id="beat1">1</span>
+                    <span class="beat-dot" id="beat2">2</span>
+                    <span class="beat-dot" id="beat3">3</span>
+                    <span class="beat-dot" id="beat4">4</span>
+                </div>
+                <div class="bpm-display">
+                    <span id="bpmValue">120</span> BPM
+                </div>
+            </div>
+        </main>
+
+        <!-- Control Bar -->
+        <footer class="player-controls">
+            <div class="controls-left">
+                <button onclick="skipBackward()" class="btn-control">⏮</button>
+                <button onclick="togglePlay()" id="playPauseBtn" class="btn-control btn-play">▶️</button>
+                <button onclick="stop()" class="btn-control">⏹</button>
+                <button onclick="skipForward()" class="btn-control">⏭</button>
+            </div>
+
+            <div class="controls-center">
+                <div class="progress-bar">
+                    <input type="range" id="progressSlider" min="0" max="100" value="0" 
+                           oninput="seekTo(this.value)">
+                    <div class="time-display">
+                        <span id="currentTimeDisplay">00:00</span>
+                        <span id="durationDisplay">00:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-right">
+                <div class="transpose-controls">
+                    <button onclick="transposeDown()" class="btn-transpose">-</button>
+                    <span id="transposeValue">0</span>
+                    <button onclick="transposeUp()" class="btn-transpose">+</button>
+                    <span class="transpose-label">Transpose</span>
+                </div>
+                
+                <div class="volume-control">
+                    <span>🔊</span>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="100" 
+                           oninput="setVolume(this.value)">
+                </div>
+            </div>
+        </footer>
+
+        <!-- Settings Panel (Hidden by default) -->
+        <div id="settingsPanel" class="settings-panel" style="display: none;">
+            <div class="settings-content">
+                <h2>Settings</h2>
+                <button onclick="toggleSettings()" class="btn-close">✖</button>
+                
+                <div class="setting-group">
+                    <label>Font Size</label>
+                    <input type="range" id="fontSizeSlider" min="16" max="72" value="48" 
+                           oninput="changeFontSize(this.value)">
+                    <span id="fontSizeValue">48px</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label>Display Mode</label>
+                    <select id="displayMode" onchange="changeDisplayMode(this.value)">
+                        <option value="3-line">3 Lines (Previous/Current/Next)</option>
+                        <option value="current-only">Current Only</option>
+                        <option value="scroll">Scrolling</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label>Chord Notation</label>
+                    <select id="chordNotation" onchange="changeChordNotation(this.value)">
+                        <option value="sharp">Sharp (#)</option>
+                        <option value="flat">Flat (♭)</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label>Theme</label>
+                    <select id="theme" onchange="changeTheme(this.value)">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                        <option value="high-contrast">High Contrast</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="showChords" checked onchange="toggleChords(this.checked)">
+                        Show Chords
+                    </label>
+                </div>
+                
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="showBeat" checked onchange="toggleBeat(this.checked)">
+                        Show Beat Indicator
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Song Selector (Hidden by default) -->
+        <div id="songSelector" class="song-selector" style="display: none;">
+            <div class="selector-content">
+                <h2>Select Song</h2>
+                <button onclick="showSongSelector()" class="btn-close">✖</button>
+                
+                <input type="text" id="songSearch" placeholder="Search songs..." 
+                       onkeyup="filterSongList()">
+                
+                <div id="songListContainer" class="song-list-container">
+                    <p class="loading">Loading songs...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/websocket.js"></script>
+    <script src="/static/js/player.js"></script>
+</body>
+</html>
+
