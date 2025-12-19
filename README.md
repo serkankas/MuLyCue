@@ -168,7 +168,9 @@ MuLyCue/
 │   ├── frontend/             # Web frontend
 │   │   ├── index.html        # Landing page
 │   │   ├── editor.html       # Song editor
-│   │   ├── player.html       # Live player
+│   │   ├── player-panels.html # Professional panel-based player
+│   │   ├── player-window.html # Detached panel window
+│   │   ├── test-panels.html  # Panel system test page
 │   │   ├── css/              # Stylesheets
 │   │   └── js/               # JavaScript modules
 │   └── launcher.py           # Desktop app launcher

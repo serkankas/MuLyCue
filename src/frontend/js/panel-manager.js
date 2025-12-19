@@ -12,7 +12,7 @@ class PanelManager {
     }
     
     addPanel(type, config = {}) {
-        console.log('Adding panel:', type, config);
+        console.log('[PanelManager] Adding panel:', type, config);
         
         const PanelClass = {
             'lyrics': LyricsPanel,
@@ -25,25 +25,39 @@ class PanelManager {
         }[type];
         
         if (!PanelClass) {
-            console.error(`Unknown panel type: ${type}`);
+            console.error('[PanelManager] Unknown panel type:', type);
             return null;
         }
         
-        console.log('Panel class found:', PanelClass.name);
+        console.log('[PanelManager] Panel class found:', PanelClass.name);
         
+        // Create panel instance
         const panel = new PanelClass(config);
-        console.log('Panel instance created:', panel.id);
         
+        // Verify panel was created successfully
+        if (!panel || !panel.element) {
+            console.error('[PanelManager] Panel creation failed! Element is null/undefined');
+            return null;
+        }
+        
+        console.log('[PanelManager] Panel instance created:', panel.id);
+        
+        // Get container
+        const container = document.getElementById('panel-container');
+        if (!container) {
+            console.error('[PanelManager] Panel container not found!');
+            return null;
+        }
+        
+        // Add to DOM
+        console.log('[PanelManager] Appending panel to container...');
+        container.appendChild(panel.element);
+        console.log('[PanelManager] Panel appended successfully');
+        
+        // Store in map
         this.panels.set(panel.id, panel);
         
-        const container = document.getElementById('panel-container');
-        if (container) {
-            console.log('Appending panel to container');
-            container.appendChild(panel.element);
-            console.log('Panel appended successfully');
-        } else {
-            console.error('Panel container not found!');
-        }
+        console.log('[PanelManager] Panel added successfully:', type, panel.id);
         
         return panel;
     }

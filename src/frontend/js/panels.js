@@ -6,6 +6,8 @@
 // Base Panel Class
 class Panel {
     constructor(type, config = {}) {
+        console.log('[Panel] Constructing:', type, config);
+        
         this.id = `panel-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         this.type = type;
         this.config = {
@@ -21,16 +23,35 @@ class Panel {
             zIndex: config.zIndex || 1
         };
         
+        console.log('[Panel] Creating element...');
         this.element = this.createElement();
+        
+        if (!this.element) {
+            console.error('[Panel] createElement() returned null/undefined!');
+            return;
+        }
+        
+        console.log('[Panel] Element created, setting up interactions...');
         this.makeDraggable();
         this.makeResizable();
         this.attachEventListeners();
+        
+        console.log('[Panel] Panel initialized:', this.id);
     }
     
     createElement() {
         const panel = document.createElement('div');
         panel.className = `panel panel-${this.type}`;
         panel.id = this.id;
+        
+        // Set position and size DIRECTLY on element (before assigning to this.element)
+        panel.style.position = 'absolute';
+        panel.style.left = `${this.config.x}px`;
+        panel.style.top = `${this.config.y}px`;
+        panel.style.width = `${this.config.width}px`;
+        panel.style.height = `${this.config.height}px`;
+        panel.style.zIndex = this.config.zIndex;
+        
         panel.innerHTML = `
             <div class="panel-header">
                 <span class="panel-title">${this.getTitle()}</span>
@@ -46,10 +67,10 @@ class Panel {
             <div class="resize-handle resize-e"></div>
         `;
         
-        this.updatePosition();
-        this.updateSize();
+        // Assign to this.element BEFORE calling methods that use it
+        this.element = panel;
         
-        // Initialize with default content
+        // Initialize with default content (now this.element exists)
         this.updateContent({});
         
         return panel;
@@ -196,10 +217,19 @@ class Panel {
     }
     
     updatePosition() {
-        this.element.style.transform = `translate(${this.config.x}px, ${this.config.y}px)`;
+        if (!this.element) {
+            console.warn('[Panel] updatePosition called but element not initialized');
+            return;
+        }
+        this.element.style.left = `${this.config.x}px`;
+        this.element.style.top = `${this.config.y}px`;
     }
     
     updateSize() {
+        if (!this.element) {
+            console.warn('[Panel] updateSize called but element not initialized');
+            return;
+        }
         this.element.style.width = `${this.config.width}px`;
         this.element.style.height = `${this.config.height}px`;
     }

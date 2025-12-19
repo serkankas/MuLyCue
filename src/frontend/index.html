@@ -28,15 +28,15 @@
                     </ul>
                 </div>
 
-                <div class="mode-card" onclick="window.location.href='/static/player.html'">
+                <div class="mode-card" onclick="window.location.href='/static/player-panels.html'">
                     <div class="mode-icon">▶️</div>
                     <h2>Player Mode</h2>
-                    <p>Real-time display of lyrics and chords for live performances</p>
+                    <p>Professional panel-based player for live performances</p>
                     <ul>
-                        <li>Synchronized lyrics display</li>
-                        <li>Chord progression</li>
-                        <li>BPM & beat counter</li>
-                        <li>Transpose on-the-fly</li>
+                        <li>Customizable layout</li>
+                        <li>Multi-window support</li>
+                        <li>Drag & drop panels</li>
+                        <li>Real-time sync</li>
                     </ul>
                 </div>
 
@@ -138,7 +138,7 @@
         }
 
         function openInPlayer(songId) {
-            window.location.href = `/static/player.html?song=${songId}`;
+            window.location.href = `/static/player-panels.html?song=${songId}`;
         }
 
         function formatTime(seconds) {
