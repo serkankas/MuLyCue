@@ -402,13 +402,29 @@ MuLyCue supports comprehensive chord notation:
 
 ## 🗺️ Roadmap
 
+### ✅ Version 0.1.0 (Current - Completed)
+- [x] **Professional Multi-Window Panel System** (OBS-style drag & drop)
+- [x] **8 Panel Types** (Lyrics, Chords, BPM, Beat, Section, Timeline, Transpose, Setlist)
+- [x] **Setlist/Queue System** (Complete gig management)
+- [x] **Setlist Manager UI** (Frontend for setlist creation/editing)
+- [x] **Song Library** (Add, manage, and load songs)
+- [x] **Panel Boundary Constraints** (Keep panels in viewport)
+- [x] **Grid Snap System** (24×24 grid alignment)
+- [x] **Multi-Monitor Support** (Detach panels to separate windows)
+- [x] **Layout Presets** (Vocalist, Guitarist, Drummer, etc.)
+- [x] **Real-Time Sync** (BroadcastChannel API for multi-window)
+- [x] **Chord Transposition** (Smart transpose with slash chords)
+- [x] **Audio Playback** (MP3, OGG, WAV support)
+- [x] **WebSocket Real-Time Updates**
+- [x] **Comprehensive Test Suite** (49 tests with pytest)
+
 ### Version 0.2.0 (Next Release)
 - [ ] **Audio seeking support** (python-vlc backend)
-- [ ] **Setlist Manager UI** (frontend for setlist creation/editing)
 - [ ] Waveform visualization in editor
 - [ ] Auto BPM detection
 - [ ] Chord diagram display
 - [ ] Export to PDF/print
+- [ ] MIDI controller support (footswitch for setlist navigation)
 
 ### Version 0.3.0
 - [ ] ML-based auto-sync
@@ -417,9 +433,9 @@ MuLyCue supports comprehensive chord notation:
 - [ ] Cloud backup for setlists
 
 ### Version 0.4.0
-- [ ] **MIDI controller support** (footswitch for setlist navigation)
 - [ ] Chord diagrams (guitar, piano, ukulele)
 - [ ] Backing track mixer
+- [ ] Video sync support
 
 ### Version 1.0.0
 - [ ] Multi-user collaboration
