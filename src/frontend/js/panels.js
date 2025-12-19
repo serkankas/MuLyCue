@@ -176,9 +176,7 @@ class Panel {
             offsetX = e.clientX - rect.left;
             offsetY = e.clientY - rect.top;
             
-            this.element.style.zIndex = Panel.getMaxZIndex() + 1;
-            this.config.zIndex = parseInt(this.element.style.zIndex);
-            
+            // Bring to front (will be handled by the general mousedown listener)
             this.element.classList.add('dragging');
         });
         
@@ -296,6 +294,23 @@ class Panel {
         detachBtn.addEventListener('click', () => this.detach());
         minimizeBtn.addEventListener('click', () => this.minimize());
         closeBtn.addEventListener('click', () => this.close());
+        
+        // Bring panel to front when clicked anywhere on the panel
+        this.element.addEventListener('mousedown', (e) => {
+            this.bringToFront();
+        });
+    }
+    
+    bringToFront() {
+        // Get current max z-index and set this panel above it
+        const maxZ = Panel.getMaxZIndex();
+        this.element.style.zIndex = maxZ + 1;
+        this.config.zIndex = maxZ + 1;
+        
+        // Notify panel manager to update layout
+        if (window.panelManager) {
+            window.panelManager.saveLayout();
+        }
     }
     
     updatePosition() {

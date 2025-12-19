@@ -58,6 +58,9 @@ class PanelManager {
         // Store in map
         this.panels.set(panel.id, panel);
         
+        // Bring newly added panel to front
+        panel.bringToFront();
+        
         console.log('[PanelManager] Panel added successfully:', type, panel.id);
         
         return panel;
