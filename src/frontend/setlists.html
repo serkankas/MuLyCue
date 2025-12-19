@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setlists - MuLyCue</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/setlists.css">
+</head>
+<body>
+    <div class="setlists-container">
+        <!-- Header -->
+        <header class="setlists-header">
+            <button class="btn-back" onclick="window.location.href='/static/index.html'">
+                ← Back
+            </button>
+            <h1>🎸 Setlists</h1>
+            <div class="header-actions">
+                <button class="btn-primary" id="btn-new-setlist">
+                    ➕ New Setlist
+                </button>
+            </div>
+        </header>
+
+        <!-- Setlists Grid -->
+        <div class="setlists-content">
+            <div class="setlists-grid" id="setlists-grid">
+                <!-- Setlist cards will be inserted here -->
+            </div>
+
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <div class="empty-icon">🎸</div>
+                <h2>No Setlists Yet</h2>
+                <p>Create your first setlist for your gig or show</p>
+                <button class="btn-primary" onclick="showNewSetlistModal()">
+                    Create Your First Setlist
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New/Edit Setlist Modal -->
+    <div class="modal" id="setlist-modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="modal-title">New Setlist</h2>
+                <button class="btn-close" onclick="closeSetlistModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="setlist-form">
+                    <!-- Basic Info -->
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-group">
+                            <label>Setlist Name *</label>
+                            <input type="text" id="setlist-name" placeholder="e.g., Coffee Shop Gig" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="setlist-description" placeholder="Acoustic set for downtown venue..." rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Tags (comma-separated)</label>
+                            <input type="text" id="setlist-tags" placeholder="acoustic, venue-name, genre">
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="form-section">
+                        <h3>Playback Settings</h3>
+                        <div class="form-row">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-advance" checked>
+                                <span>Auto-advance to next song</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="loop-setlist">
+                                <span>Loop setlist when finished</span>
+                            </label>
+                        </div>
+                        <div class="form-row">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="shuffle-setlist">
+                                <span>Shuffle playback order</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="show-countdown" checked>
+                                <span>Show countdown between songs</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Gap Between Songs (seconds)</label>
+                            <input type="number" id="gap-seconds" value="5" min="0" max="60">
+                        </div>
+                    </div>
+
+                    <!-- Songs List -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3>Songs</h3>
+                            <button type="button" class="btn-secondary" onclick="showAddSongModal()">
+                                + Add Song
+                            </button>
+                        </div>
+                        <div class="songs-list" id="songs-list">
+                            <div class="empty-songs">
+                                <p>No songs added yet. Click "Add Song" to get started.</p>
+                            </div>
+                        </div>
+                        <div class="setlist-summary" id="setlist-summary">
+                            <span><strong>Total:</strong> <span id="total-songs">0</span> songs</span>
+                            <span><strong>Duration:</strong> <span id="total-duration">0:00</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeSetlistModal()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            Save Setlist
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Song Modal -->
+    <div class="modal" id="add-song-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Song to Setlist</h2>
+                <button class="btn-close" onclick="closeAddSongModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" id="song-search" placeholder="🔍 Search songs..." class="search-input">
+                </div>
+
+                <div class="available-songs" id="available-songs">
+                    <!-- Available songs will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/setlists.js"></script>
+</body>
+</html>
+
