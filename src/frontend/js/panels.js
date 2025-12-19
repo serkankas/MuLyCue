@@ -5,6 +5,12 @@
 
 // Base Panel Class
 class Panel {
+    // Static grid configuration
+    static GRID_ENABLED = false;
+    static GRID_COLUMNS = 24;
+    static GRID_ROWS = 24;
+    static SHOW_GRID = false;
+    
     constructor(type, config = {}) {
         console.log('[Panel] Constructing:', type, config);
         
@@ -23,6 +29,15 @@ class Panel {
             zIndex: config.zIndex || 1
         };
         
+        // Get viewport dimensions (accounting for header/footer)
+        this.updateViewport();
+        
+        // Update viewport on window resize
+        window.addEventListener('resize', () => {
+            this.updateViewport();
+            this.constrainToViewport();
+        });
+        
         console.log('[Panel] Creating element...');
         this.element = this.createElement();
         
@@ -36,7 +51,65 @@ class Panel {
         this.makeResizable();
         this.attachEventListeners();
         
+        // Ensure panel is within viewport bounds
+        this.constrainToViewport();
+        
         console.log('[Panel] Panel initialized:', this.id);
+    }
+    
+    updateViewport() {
+        // Account for header (60px) and footer (80px)
+        const headerHeight = 60;
+        const footerHeight = 80;
+        
+        this.viewport = {
+            width: window.innerWidth,
+            height: window.innerHeight - headerHeight - footerHeight,
+            offsetTop: headerHeight,
+            offsetBottom: footerHeight
+        };
+        
+        // Update grid size
+        this.gridSize = {
+            width: this.viewport.width / Panel.GRID_COLUMNS,
+            height: this.viewport.height / Panel.GRID_ROWS
+        };
+    }
+    
+    constrainToViewport() {
+        // Minimum 50px visible on right edge
+        const minVisible = 50;
+        
+        // Constrain X position
+        const maxX = this.viewport.width - minVisible;
+        const minX = 0;
+        this.config.x = Math.max(minX, Math.min(maxX, this.config.x));
+        
+        // Constrain Y position
+        const maxY = this.viewport.height - minVisible;
+        const minY = 0;
+        this.config.y = Math.max(minY, Math.min(maxY, this.config.y));
+        
+        // Constrain width
+        const maxWidth = this.viewport.width - this.config.x;
+        this.config.width = Math.min(this.config.width, maxWidth);
+        
+        // Constrain height
+        const maxHeight = this.viewport.height - this.config.y;
+        this.config.height = Math.min(this.config.height, maxHeight);
+        
+        // Update position and size
+        this.updatePosition();
+        this.updateSize();
+    }
+    
+    snapToGrid(x, y) {
+        if (!Panel.GRID_ENABLED) return { x, y };
+        
+        return {
+            x: Math.round(x / this.gridSize.width) * this.gridSize.width,
+            y: Math.round(y / this.gridSize.height) * this.gridSize.height
+        };
     }
     
     createElement() {
@@ -92,14 +165,16 @@ class Panel {
     makeDraggable() {
         const header = this.element.querySelector('.panel-header');
         let isDragging = false;
-        let startX, startY;
+        let offsetX, offsetY;
         
         header.addEventListener('mousedown', (e) => {
             if (e.target.closest('.panel-controls')) return;
             
             isDragging = true;
-            startX = e.clientX - this.config.x;
-            startY = e.clientY - this.config.y;
+            const rect = this.element.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            
             this.element.style.zIndex = Panel.getMaxZIndex() + 1;
             this.config.zIndex = parseInt(this.element.style.zIndex);
             
@@ -109,13 +184,22 @@ class Panel {
         document.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
             
-            this.config.x = e.clientX - startX;
-            this.config.y = e.clientY - startY;
+            // Calculate new position
+            let newX = e.clientX - offsetX;
+            let newY = e.clientY - offsetY;
             
-            // Snap to edges (optional)
-            if (window.panelManager?.snapToEdges) {
-                this.snapToEdges();
-            }
+            // Apply boundary constraints
+            const minVisible = 50;
+            const maxX = this.viewport.width - minVisible;
+            const minX = 0;
+            const maxY = this.viewport.height - minVisible;
+            const minY = 0;
+            
+            newX = Math.max(minX, Math.min(maxX, newX));
+            newY = Math.max(minY, Math.min(maxY, newY));
+            
+            this.config.x = newX;
+            this.config.y = newY;
             
             this.updatePosition();
         });
@@ -123,6 +207,15 @@ class Panel {
         document.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
+                
+                // Apply grid snap if enabled
+                if (Panel.GRID_ENABLED) {
+                    const snapped = this.snapToGrid(this.config.x, this.config.y);
+                    this.config.x = snapped.x;
+                    this.config.y = snapped.y;
+                    this.updatePosition();
+                }
+                
                 this.element.classList.remove('dragging');
                 this.saveState();
             }
@@ -134,7 +227,7 @@ class Panel {
         
         handles.forEach(handle => {
             let isResizing = false;
-            let startX, startY, startWidth, startHeight, startLeft, startTop;
+            let startX, startY, startWidth, startHeight;
             
             handle.addEventListener('mousedown', (e) => {
                 e.stopPropagation();
@@ -143,8 +236,6 @@ class Panel {
                 startY = e.clientY;
                 startWidth = this.config.width;
                 startHeight = this.config.height;
-                startLeft = this.config.x;
-                startTop = this.config.y;
                 
                 this.element.classList.add('resizing');
             });
@@ -155,16 +246,32 @@ class Panel {
                 const deltaX = e.clientX - startX;
                 const deltaY = e.clientY - startY;
                 
+                // Calculate max dimensions based on viewport
+                const maxWidth = this.viewport.width - this.config.x;
+                const maxHeight = this.viewport.height - this.config.y;
+                
                 if (handle.classList.contains('resize-se')) {
-                    // Southeast corner
-                    this.config.width = Math.max(this.config.minWidth, startWidth + deltaX);
-                    this.config.height = Math.max(this.config.minHeight, startHeight + deltaY);
+                    // Southeast corner - resize both width and height
+                    this.config.width = Math.max(
+                        this.config.minWidth, 
+                        Math.min(maxWidth, startWidth + deltaX)
+                    );
+                    this.config.height = Math.max(
+                        this.config.minHeight, 
+                        Math.min(maxHeight, startHeight + deltaY)
+                    );
                 } else if (handle.classList.contains('resize-s')) {
-                    // South edge
-                    this.config.height = Math.max(this.config.minHeight, startHeight + deltaY);
+                    // South edge - resize height only
+                    this.config.height = Math.max(
+                        this.config.minHeight, 
+                        Math.min(maxHeight, startHeight + deltaY)
+                    );
                 } else if (handle.classList.contains('resize-e')) {
-                    // East edge
-                    this.config.width = Math.max(this.config.minWidth, startWidth + deltaX);
+                    // East edge - resize width only
+                    this.config.width = Math.max(
+                        this.config.minWidth, 
+                        Math.min(maxWidth, startWidth + deltaX)
+                    );
                 }
                 
                 this.updateSize();
@@ -188,32 +295,6 @@ class Panel {
         detachBtn.addEventListener('click', () => this.detach());
         minimizeBtn.addEventListener('click', () => this.minimize());
         closeBtn.addEventListener('click', () => this.close());
-    }
-    
-    snapToEdges() {
-        const snapDistance = 20;
-        const containerWidth = window.innerWidth;
-        const containerHeight = window.innerHeight;
-        
-        // Snap to left
-        if (this.config.x < snapDistance) {
-            this.config.x = 0;
-        }
-        
-        // Snap to top
-        if (this.config.y < snapDistance) {
-            this.config.y = 0;
-        }
-        
-        // Snap to right
-        if (this.config.x + this.config.width > containerWidth - snapDistance) {
-            this.config.x = containerWidth - this.config.width;
-        }
-        
-        // Snap to bottom
-        if (this.config.y + this.config.height > containerHeight - snapDistance) {
-            this.config.y = containerHeight - this.config.height;
-        }
     }
     
     updatePosition() {

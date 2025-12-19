@@ -91,9 +91,17 @@
                 📥 Import
                 <input type="file" accept=".json" onchange="importLayout(this.files[0])" style="display: none;">
             </label>
-            <label>
-                <input type="checkbox" id="snapToEdges" checked onchange="toggleSnap(this.checked)">
-                Snap to edges
+        </div>
+        
+        <div class="control-section" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+            <h4 style="margin: 0 0 8px 0; font-size: 0.875rem; color: var(--text-secondary);">Grid Settings</h4>
+            <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <input type="checkbox" id="gridSnapToggle" onchange="toggleGridSnap(this.checked)">
+                <span style="font-size: 0.875rem;">Snap to Grid (24×24)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="showGridToggle" onchange="toggleShowGrid(this.checked)">
+                <span style="font-size: 0.875rem;">Show Grid Overlay</span>
             </label>
         </div>
     </div>

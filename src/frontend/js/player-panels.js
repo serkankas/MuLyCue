@@ -276,10 +276,22 @@ function updatePanelToggles() {
     });
 }
 
-function toggleSnap(enabled) {
-    if (window.panelManager) {
-        window.panelManager.snapToEdges = enabled;
+function toggleGridSnap(enabled) {
+    Panel.GRID_ENABLED = enabled;
+    console.log('Grid snap:', enabled ? 'enabled' : 'disabled');
+}
+
+function toggleShowGrid(enabled) {
+    const container = document.getElementById('panel-container');
+    if (container) {
+        if (enabled) {
+            container.classList.add('show-grid');
+        } else {
+            container.classList.remove('show-grid');
+        }
     }
+    Panel.SHOW_GRID = enabled;
+    console.log('Grid overlay:', enabled ? 'visible' : 'hidden');
 }
 
 function importLayout(file) {

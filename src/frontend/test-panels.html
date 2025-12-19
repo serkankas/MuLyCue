@@ -114,6 +114,18 @@
             <button onclick="window.panelManager.resetLayout()">🔄 Reset</button>
             <button onclick="window.panelManager.exportLayout()">📤 Export</button>
         </div>
+        
+        <div class="control-section" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+            <h4 style="margin: 0 0 8px 0; font-size: 0.875rem; color: var(--text-secondary);">Grid Settings</h4>
+            <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <input type="checkbox" id="gridSnapToggle" onchange="toggleGridSnap(this.checked)">
+                <span style="font-size: 0.875rem;">Snap to Grid (24×24)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="showGridToggle" onchange="toggleShowGrid(this.checked)">
+                <span style="font-size: 0.875rem;">Show Grid Overlay</span>
+            </label>
+        </div>
     </div>
 
     <!-- Test Footer -->
@@ -170,6 +182,24 @@
                 document.getElementById('panelCount').textContent = 
                     `Panels: ${window.panelManager.panels.size}`;
             }
+        }
+
+        function toggleGridSnap(enabled) {
+            Panel.GRID_ENABLED = enabled;
+            console.log('Grid snap:', enabled ? 'enabled' : 'disabled');
+        }
+
+        function toggleShowGrid(enabled) {
+            const container = document.getElementById('panel-container');
+            if (container) {
+                if (enabled) {
+                    container.classList.add('show-grid');
+                } else {
+                    container.classList.remove('show-grid');
+                }
+            }
+            Panel.SHOW_GRID = enabled;
+            console.log('Grid overlay:', enabled ? 'visible' : 'hidden');
         }
 
         // Test data update
