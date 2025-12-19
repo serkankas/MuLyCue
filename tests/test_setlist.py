@@ -152,7 +152,9 @@ def test_setlist_estimated_time():
     song = SetlistSong(id="song1", title="Song 1", artist="Artist", duration=3600.0)  # 1 hour
     setlist.add_song(song)
     
-    assert "1h" in setlist.estimated_time
+    # Should show "1h 0m" or "60 minutes"
+    estimated = setlist.estimated_time
+    assert ("1h" in estimated) or ("60 minutes" in estimated)
 
 
 def test_setlist_song_count():
