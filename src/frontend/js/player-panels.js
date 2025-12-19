@@ -88,6 +88,19 @@ function setupWebSocketCallbacks() {
     ws.on('song_loaded', (data) => {
         handleSongLoaded(data.song);
     });
+    
+    // Setlist events
+    ws.on('setlist_update', (data) => {
+        handleSetlistUpdate(data);
+    });
+    
+    ws.on('gap_countdown', (data) => {
+        handleGapCountdown(data);
+    });
+    
+    ws.on('setlist_finished', (data) => {
+        handleSetlistFinished(data);
+    });
 }
 
 function broadcastToAllPanels(data) {
@@ -353,6 +366,69 @@ async function selectSong(songId) {
     const url = new URL(window.location);
     url.searchParams.set('song', songId);
     window.history.pushState({}, '', url);
+}
+
+// Setlist handlers
+function handleSetlistUpdate(data) {
+    console.log('Setlist update:', data);
+    
+    broadcastToAllPanels({
+        setlist: true,
+        setlistName: data.setlist_name,
+        currentIndex: data.progress.current_index,
+        songs: data.current_song ? [data.current_song, data.next_song].filter(Boolean) : [],
+        progress: data.progress
+    });
+    
+    // Update header with current song from setlist
+    if (data.current_song) {
+        document.getElementById('songTitle').textContent = data.current_song.title;
+        document.getElementById('songArtist').textContent = data.current_song.artist;
+    }
+}
+
+function handleGapCountdown(data) {
+    console.log('Gap countdown:', data.remaining);
+    
+    // Show countdown notification
+    showToast(`Next song in ${data.remaining} seconds...`, 'info');
+    
+    if (data.next_song) {
+        showToast(`Up next: ${data.next_song.title}`, 'info');
+    }
+}
+
+function handleSetlistFinished(data) {
+    console.log('Setlist finished:', data);
+    showToast('🎉 Setlist completed! Great show!', 'success');
+}
+
+// Setlist controls
+async function nextSong() {
+    try {
+        await fetch(`${API_URL}/queue/next`, { method: 'POST' });
+    } catch (error) {
+        console.error('Error skipping to next song:', error);
+        showToast('Error skipping song', 'error');
+    }
+}
+
+async function previousSong() {
+    try {
+        await fetch(`${API_URL}/queue/previous`, { method: 'POST' });
+    } catch (error) {
+        console.error('Error going to previous song:', error);
+        showToast('Error going back', 'error');
+    }
+}
+
+async function jumpToSong(index) {
+    try {
+        await fetch(`${API_URL}/queue/jump/${index}`, { method: 'POST' });
+    } catch (error) {
+        console.error('Error jumping to song:', error);
+        showToast('Error jumping to song', 'error');
+    }
 }
 
 // Helper function

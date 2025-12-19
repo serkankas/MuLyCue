@@ -157,7 +157,8 @@ class Panel {
             'beat': '⏱️ Beat Counter',
             'section': '🎬 Section',
             'timeline': '▶️ Timeline',
-            'transpose': '🎹 Transpose'
+            'transpose': '🎹 Transpose',
+            'setlist': '🎸 Setlist'
         };
         return titles[this.type] || this.type;
     }
@@ -483,6 +484,70 @@ class TransposePanel extends Panel {
                 <button class="btn-transpose" onclick="transposeUp()">+</button>
             </div>
             <div class="transpose-label">Transpose</div>
+        `;
+    }
+}
+
+class SetlistPanel extends Panel {
+    constructor(config) {
+        super('setlist', { ...config, minWidth: 300, minHeight: 400 });
+    }
+    
+    updateContent(data = {}) {
+        const content = this.element.querySelector('.panel-content');
+        
+        if (!data.setlist) {
+            content.innerHTML = `
+                <div class="setlist-empty">
+                    <p>No setlist loaded</p>
+                    <button class="btn-load-setlist" onclick="window.location.href='/static/setlists.html'">
+                        Load Setlist
+                    </button>
+                </div>
+            `;
+            return;
+        }
+        
+        const currentIndex = data.currentIndex || 0;
+        const songs = data.songs || [];
+        const progress = data.progress || {};
+        
+        content.innerHTML = `
+            <div class="setlist-header">
+                <div class="setlist-name">${data.setlistName || 'Setlist'}</div>
+                <div class="setlist-progress">
+                    ${currentIndex + 1} / ${songs.length} songs
+                </div>
+            </div>
+            
+            <div class="setlist-songs">
+                ${songs.map((song, index) => `
+                    <div class="setlist-song ${index === currentIndex ? 'current' : ''} ${index < currentIndex ? 'played' : ''}" 
+                         onclick="jumpToSong(${index})">
+                        <div class="song-number">${index + 1}</div>
+                        <div class="song-info">
+                            <div class="song-title">${song.title}</div>
+                            <div class="song-meta">${song.artist} • ${formatTime(song.duration)}</div>
+                        </div>
+                        ${index === currentIndex ? '<div class="song-playing">▶️</div>' : ''}
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="setlist-controls">
+                <button onclick="previousSong()" ${currentIndex === 0 ? 'disabled' : ''}>⏮ Previous</button>
+                <button onclick="nextSong()" ${currentIndex >= songs.length - 1 ? 'disabled' : ''}>Next ⏭</button>
+            </div>
+            
+            <div class="setlist-footer">
+                <div class="setlist-time">
+                    <span>Elapsed: ${formatTime(progress.elapsed_time || 0)}</span>
+                    <span>Total: ${formatTime(progress.total_time || 0)}</span>
+                </div>
+                <div class="setlist-remaining">
+                    ${progress.remaining_songs || 0} songs remaining
+                </div>
+            </div>
         `;
     }
 }

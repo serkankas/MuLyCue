@@ -21,7 +21,8 @@ class PanelManager {
             'beat': BeatPanel,
             'section': SectionPanel,
             'timeline': TimelinePanel,
-            'transpose': TransposePanel
+            'transpose': TransposePanel,
+            'setlist': SetlistPanel
         }[type];
         
         if (!PanelClass) {
@@ -261,7 +262,8 @@ const LAYOUT_PRESETS = {
         { type: 'lyrics', config: { x: 20, y: 20, width: 600, height: 400 } },
         { type: 'chords', config: { x: 640, y: 20, width: 300, height: 200 } },
         { type: 'bpm', config: { x: 640, y: 240, width: 300, height: 200 } },
-        { type: 'timeline', config: { x: 20, y: 440, width: 920, height: 120 } }
+        { type: 'timeline', config: { x: 20, y: 440, width: 920, height: 120 } },
+        { type: 'setlist', config: { x: 960, y: 20, width: 320, height: 540 } }
     ],
     
     vocalist: [
