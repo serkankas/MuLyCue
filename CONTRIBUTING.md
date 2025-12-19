@@ -2,7 +2,8 @@
 
 Thank you for your interest in contributing to MuLyCue! This document provides guidelines and instructions for contributing.
 
-**Project Creator**: Serkan KAS (serkankas98@gmail.com)  
+**Project Creator**: Serkan KAS ([serkankas98@gmail.com](mailto:serkankas98@gmail.com))  
+**GitHub**: [@serkankas](https://github.com/serkankas)  
 **Repository**: [github.com/serkankas/MuLyCue](https://github.com/serkankas/MuLyCue)
 
 ## Code of Conduct
@@ -175,7 +176,7 @@ pytest --cov=src tests/
 Feel free to ask questions in:
 - [GitHub Discussions](https://github.com/serkankas/MuLyCue/discussions)
 - [Issues](https://github.com/serkankas/MuLyCue/issues)
-- Email: serkankas98@gmail.com
+- Email: [serkankas98@gmail.com](mailto:serkankas98@gmail.com)
 
 ## Development Notes
 

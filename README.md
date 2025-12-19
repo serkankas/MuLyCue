@@ -10,7 +10,8 @@ A powerful desktop application for synchronized lyrics, chords, and timing displ
 [![GitHub](https://img.shields.io/badge/GitHub-serkankas%2FMuLyCue-blue?logo=github)](https://github.com/serkankas/MuLyCue)
 
 **Designed By:** Serkan KAS  
-**Contact:** serkankas98@gmail.com  
+**Contact:** [serkankas98@gmail.com](mailto:serkankas98@gmail.com)  
+**GitHub:** [@serkankas](https://github.com/serkankas)  
 **AI Assistant:** Claude Sonnet 4.5 (via Cursor)  
 **Development:** Codes and documentation prepared with assistance from Cursor AI
 
@@ -79,7 +80,7 @@ A powerful desktop application for synchronized lyrics, chords, and timing displ
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/MuLyCue.git
+git clone https://github.com/serkankas/MuLyCue.git
 cd MuLyCue
 ```
 
@@ -463,9 +464,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/MuLyCue/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/MuLyCue/discussions)
-- **Email**: support@mulycue.com
+- **Issues**: [GitHub Issues](https://github.com/serkankas/MuLyCue/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/serkankas/MuLyCue/discussions)
+- **Email**: [serkankas98@gmail.com](mailto:serkankas98@gmail.com)
 
 ---
 
@@ -486,7 +487,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### **Project Creator**
 **Serkan KAS**  
-📧 serkankas98@gmail.com  
+📧 [serkankas98@gmail.com](mailto:serkankas98@gmail.com)  
 🔗 [GitHub: @serkankas](https://github.com/serkankas)
 
 ### **Development**
