@@ -371,7 +371,7 @@ class Panel {
     
     static getMaxZIndex() {
         const panels = document.querySelectorAll('.panel');
-        return Math.max(0, ...Array.from(panels).map(el => parseInt(el.style.zIndex) || 0));
+        return Math.max(100, ...Array.from(panels).map(el => parseInt(el.style.zIndex) || 100));
     }
 }
 

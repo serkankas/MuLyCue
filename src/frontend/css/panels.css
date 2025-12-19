@@ -12,7 +12,7 @@
     bottom: 80px;
     overflow: hidden;
     background: var(--bg-primary);
-    z-index: 1;
+    z-index: 10;
     transition: background-image 0.3s ease;
 }
 
@@ -46,6 +46,8 @@
     flex-direction: column;
     overflow: hidden;
     transition: box-shadow 0.2s ease;
+    z-index: 100;
+    pointer-events: auto;
 }
 
 .panel:hover {
@@ -56,10 +58,12 @@
     opacity: 0.9;
     box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
     border-color: var(--primary-color);
+    z-index: 500;
 }
 
 .panel.resizing {
     opacity: 0.95;
+    z-index: 500;
 }
 
 /* Panel Header */
@@ -401,7 +405,7 @@
     border-radius: 8px;
     padding: 12px;
     box-shadow: var(--shadow-lg);
-    z-index: 1000;
+    z-index: 1001;
     max-width: 250px;
     max-height: calc(100vh - 160px);
     overflow-y: auto;
@@ -500,5 +504,40 @@
 
 .panel-content::-webkit-scrollbar-thumb:hover {
     background: var(--text-muted);
+}
+
+/* Player Header & Footer Styles */
+.player-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.player-header .header-left,
+.player-header .header-center,
+.player-header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.player-header .song-info h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.player-header .song-info p {
+    font-size: 0.875rem;
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
 }
 

@@ -9,12 +9,12 @@
 </head>
 <body>
     <!-- Top Bar -->
-    <header class="player-header" style="position: fixed; top: 0; left: 0; right: 0; height: 60px; z-index: 999;">
+    <header class="player-header" style="position: fixed; top: 0; left: 0; right: 0; height: 60px; z-index: 1000; background: var(--bg-secondary); border-bottom: 2px solid var(--border-color);">
         <div class="header-left">
             <button onclick="window.location.href='/static/index.html'" class="btn-back">← Back</button>
             <div class="song-info">
-                <h1 id="songTitle">No Song Loaded</h1>
-                <p id="songArtist">-</p>
+                <h1 id="songTitle" style="font-size: 1.25rem; margin: 0;">No Song Loaded</h1>
+                <p id="songArtist" style="font-size: 0.875rem; margin: 0; color: var(--text-secondary);">-</p>
             </div>
         </div>
         
@@ -107,7 +107,7 @@
     </div>
 
     <!-- Control Bar -->
-    <footer class="player-controls" style="position: fixed; bottom: 0; left: 0; right: 0; height: 80px; z-index: 999;">
+    <footer class="player-controls" style="position: fixed; bottom: 0; left: 0; right: 0; height: 80px; z-index: 1000; background: var(--bg-secondary); border-top: 2px solid var(--border-color);">
         <div class="controls-left">
             <button onclick="skipBackward()" class="btn-control">⏮</button>
             <button onclick="togglePlay()" id="playPauseBtn" class="btn-control btn-play">▶️</button>
