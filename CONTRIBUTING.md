@@ -2,6 +2,9 @@
 
 Thank you for your interest in contributing to MuLyCue! This document provides guidelines and instructions for contributing.
 
+**Project Creator**: Serkan KAS (serkankas98@gmail.com)  
+**Repository**: [github.com/serkankas/MuLyCue](https://github.com/serkankas/MuLyCue)
+
 ## Code of Conduct
 
 - Be respectful and inclusive
@@ -13,7 +16,7 @@ Thank you for your interest in contributing to MuLyCue! This document provides g
 
 ### Reporting Bugs
 
-1. Check if the bug has already been reported in [Issues](https://github.com/yourusername/MuLyCue/issues)
+1. Check if the bug has already been reported in [Issues](https://github.com/serkankas/MuLyCue/issues)
 2. If not, create a new issue with:
    - Clear title and description
    - Steps to reproduce
@@ -23,7 +26,7 @@ Thank you for your interest in contributing to MuLyCue! This document provides g
 
 ### Suggesting Features
 
-1. Check [Discussions](https://github.com/yourusername/MuLyCue/discussions) for similar ideas
+1. Check [Discussions](https://github.com/serkankas/MuLyCue/discussions) for similar ideas
 2. Create a new discussion or issue with:
    - Clear description of the feature
    - Use cases and benefits
@@ -73,7 +76,7 @@ Thank you for your interest in contributing to MuLyCue! This document provides g
 
 1. Clone your fork:
 ```bash
-git clone https://github.com/yourusername/MuLyCue.git
+git clone https://github.com/serkankas/MuLyCue.git
 cd MuLyCue
 ```
 
@@ -170,8 +173,16 @@ pytest --cov=src tests/
 ## Questions?
 
 Feel free to ask questions in:
-- [GitHub Discussions](https://github.com/yourusername/MuLyCue/discussions)
-- [Issues](https://github.com/yourusername/MuLyCue/issues)
+- [GitHub Discussions](https://github.com/serkankas/MuLyCue/discussions)
+- [Issues](https://github.com/serkankas/MuLyCue/issues)
+- Email: serkankas98@gmail.com
+
+## Development Notes
+
+This project was developed with assistance from:
+- **AI Model**: Claude Sonnet 4.5 (Anthropic)
+- **Development Tool**: Cursor AI Editor
+- **Methodology**: AI-assisted development with human design and oversight
 
 Thank you for contributing to MuLyCue! 🎵
 

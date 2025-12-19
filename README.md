@@ -7,6 +7,12 @@ A powerful desktop application for synchronized lyrics, chords, and timing displ
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](version.json)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
+[![GitHub](https://img.shields.io/badge/GitHub-serkankas%2FMuLyCue-blue?logo=github)](https://github.com/serkankas/MuLyCue)
+
+**Designed By:** Serkan KAS  
+**Contact:** serkankas98@gmail.com  
+**AI Assistant:** Claude Sonnet 4.5 (via Cursor)  
+**Development:** Codes and documentation prepared with assistance from Cursor AI
 
 ---
 
@@ -14,15 +20,17 @@ A powerful desktop application for synchronized lyrics, chords, and timing displ
 
 ### 🎨 Professional Panel System
 - **OBS-Style Interface**: Drag-and-drop panels like professional streaming software
-- **7 Panel Types**: Lyrics, Chords, BPM, Beat Counter, Section, Timeline, Transpose
+- **8 Panel Types**: Lyrics, Chords, BPM, Beat Counter, Section, Timeline, Transpose, **Setlist**
 - **Multi-Monitor Support**: Pop out panels to separate windows
 - **Layout Presets**: Quick layouts for different roles (Vocalist, Guitarist, Drummer)
 - **Custom Layouts**: Save and share your own layouts
 - **Real-Time Sync**: All windows stay synchronized
-- **Snap to Edges**: Optional edge snapping for clean layouts
+- **Boundary Constraints**: Panels stay within viewport, never go off-screen
+- **24×24 Grid Snap**: Optional grid system for precise alignment
 
-### 📋 Setlist/Queue System (NEW!)
-- **Professional Setlist Management**: Create and manage playlists for live performances
+### 📋 Setlist/Queue System
+- **Professional Setlist Management**: Create and manage playlists for gigs and shows
+- **Setlist Manager UI**: Full-featured interface for creating and editing setlists
 - **Auto-Advance**: Automatically load next song when current finishes
 - **Configurable Gaps**: Set time between songs (0-60 seconds) with countdown
 - **Manual Navigation**: Skip forward/backward or jump to any song
@@ -30,8 +38,10 @@ A powerful desktop application for synchronized lyrics, chords, and timing displ
 - **Progress Tracking**: Track elapsed time, remaining songs, and overall progress
 - **Performance Notes**: Add notes per song (capo, tuning, etc.)
 - **Per-Song Overrides**: Override transpose for individual songs
-- **Save/Load Setlists**: Save setlists for different gigs and venues
+- **Save/Load Setlists**: Save setlists for different gigs and venues (.mls format)
 - **Tags & Organization**: Organize setlists by venue, genre, or event type
+- **Live Panel Integration**: Setlist panel in player shows current song and progress
+- **One-Click Load**: Load setlist directly to player from manager
 
 ### 🎼 Editor Mode
 - **Import Audio Files**: Support for MP3, OGG, and WAV formats
@@ -443,9 +453,37 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
+## 👨‍💻 Credits & Acknowledgments
+
+### **Project Creator**
+**Serkan KAS**  
+📧 serkankas98@gmail.com  
+🔗 [GitHub: @serkankas](https://github.com/serkankas)
+
+### **Development**
+- **AI Assistant**: Claude Sonnet 4.5 (Anthropic)
+- **Development Environment**: Cursor AI Editor
+- **Methodology**: AI-assisted development with human oversight and design
+
+### **Technology Stack**
+- **Backend**: FastAPI, Python 3.8+
+- **Frontend**: Vanilla JavaScript, HTML5, CSS3
+- **Audio**: pygame.mixer, mutagen
+- **Desktop**: PyWebView
+- **Real-time**: WebSockets, BroadcastChannel API
+
+### **Special Thanks**
+- Anthropic for Claude Sonnet 4.5
+- Cursor team for the amazing AI-powered development environment
+- Open source community for the libraries and tools used
+
+---
+
 ## 🎵 Made with ❤️ for Musicians
 
 MuLyCue is designed by musicians, for musicians. Whether you're performing live, practicing at home, or leading worship, MuLyCue helps you stay in sync and focused on your performance.
+
+**Repository**: [github.com/serkankas/MuLyCue](https://github.com/serkankas/MuLyCue)
 
 **Happy Playing! 🎸🎹🎤**
 
