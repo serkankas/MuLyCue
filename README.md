@@ -103,6 +103,35 @@ python -m uvicorn src.backend.main:app --reload
 
 ---
 
+## 🧪 Testing
+
+Run the test suite to ensure everything works correctly:
+
+```bash
+# Run all tests
+pytest
+
+# Run with verbose output
+pytest -v
+
+# Run specific test file
+pytest tests/test_chord.py
+
+# Run tests with coverage (requires pytest-cov)
+pytest --cov=src --cov-report=html
+
+# Use the test script
+./run_tests.sh
+```
+
+### Test Structure
+- `tests/test_chord.py` - Chord parsing and transposition tests
+- `tests/test_setlist.py` - Setlist management tests
+- `tests/conftest.py` - Shared fixtures and configuration
+- `pytest.ini` - Pytest configuration
+
+---
+
 ## 📦 Building Executables
 
 Build standalone executables for distribution:
